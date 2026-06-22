@@ -1,9 +1,2772 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr" data-theme="dark">
+
 <head>
-  <title>App Ads Verification</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description"
+    content="RUPA Developers - Premier Web, Mobile, 3D & AI Solutions by Rudra Kukadiya and Parth Sangani.">
+  <meta name="keywords"
+    content="RUPA Developers, Web Development, Three.js, Rudra Kukadiya, Parth Sangani, AI, 3D, India">
+  <meta name="author" content="RUPA Developers">
+  <meta name="theme-color" content="#0a0a0f">
+
+  <title>RUPA Developers | Digital Alchemists</title>
+
+  <!-- External CDNs -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@400;700&family=Noto+Sans+JP:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans SC', 'Noto Sans JP', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+          colors: {
+            rupa: {
+              50: '#f0fdfc',
+              100: '#ccfbf9',
+              200: '#99f6f2',
+              300: '#5eeae4',
+              400: '#2dd4cb',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+              950: '#042f2e',
+              dark: '#05050a',
+              panel: '#0f0f16',
+              accent: '#00f0ff',
+              violet: '#8b5cf6',
+              rose: '#f43f5e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* ============================================
+           1. CSS CUSTOM PROPERTIES & THEME ENGINE
+        ============================================ */
+    :root {
+      --bg-primary: #050508;
+      --bg-secondary: #0a0a12;
+      --bg-tertiary: #11111a;
+      --bg-glass: rgba(255, 255, 255, 0.03);
+      --text-primary: #ffffff;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-accent: rgba(0, 240, 255, 0.15);
+      --color-accent: #00f0ff;
+      --color-secondary: #8b5cf6;
+      --color-tertiary: #f43f5e;
+      --gradient-primary: linear-gradient(135deg, #00f0ff 0%, #8b5cf6 50%, #f43f5e 100%);
+      --gradient-subtle: linear-gradient(135deg, rgba(0, 240, 255, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+      --shadow-glow: 0 0 40px rgba(0, 240, 255, 0.15);
+      --font-mono: 'ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', monospace;
+      --transition-base: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 2rem;
+      --space-xl: 4rem;
+      --space-2xl: 8rem;
+    }
+
+    [data-theme="light"] {
+      --bg-primary: #fafafa;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f4f4f5;
+      --bg-glass: rgba(0, 0, 0, 0.03);
+      --text-primary: #18181b;
+      --text-secondary: #52525b;
+      --text-muted: #a1a1aa;
+      --border-subtle: rgba(0, 0, 0, 0.08);
+      --border-accent: rgba(13, 148, 136, 0.3);
+      --color-accent: #0d9488;
+      --color-secondary: #7c3aed;
+      --color-tertiary: #e11d48;
+      --gradient-primary: linear-gradient(135deg, #0d9488 0%, #7c3aed 50%, #e11d48 100%);
+      --shadow-glow: 0 0 40px rgba(13, 148, 136, 0.15);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    body {
+      font-family: 'Inter', 'Noto Sans SC', 'Noto Sans JP', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ============================================
+           2. ACCESSIBILITY & UTILITIES
+        ============================================ */
+    ::selection {
+      background: var(--color-accent);
+      color: #000;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, var(--color-accent), var(--color-secondary));
+      border-radius: 5px;
+      border: 2px solid var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, var(--color-secondary), var(--color-tertiary));
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    /* ============================================
+           3. LOADING SCREEN
+        ============================================ */
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 999999;
+      background: var(--bg-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    #loading-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loader-ring {
+      width: 80px;
+      height: 80px;
+      position: relative;
+    }
+
+    .loader-ring::before,
+    .loader-ring::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 3px solid transparent;
+    }
+
+    .loader-ring::before {
+      border-top-color: var(--color-accent);
+      border-right-color: var(--color-secondary);
+      animation: spin 1.5s linear infinite;
+    }
+
+    .loader-ring::after {
+      border-bottom-color: var(--color-tertiary);
+      border-left-color: var(--color-accent);
+      animation: spin 2s linear infinite reverse;
+      inset: 8px;
+    }
+
+    .loader-text {
+      margin-top: 24px;
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+    }
+
+    .loader-bar {
+      width: 240px;
+      height: 2px;
+      background: var(--border-subtle);
+      margin-top: 16px;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .loader-progress {
+      height: 100%;
+      width: 0%;
+      background: var(--gradient-primary);
+      border-radius: 2px;
+      transition: width 0.3s ease;
+    }
+
+    /* ============================================
+           4. CUSTOM CURSOR SYSTEM
+        ============================================ */
+    .cursor-dot,
+    .cursor-outline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      z-index: 99999;
+      pointer-events: none;
+    }
+
+    .cursor-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--color-accent);
+    }
+
+    .cursor-outline {
+      width: 36px;
+      height: 36px;
+      border: 1.5px solid var(--color-accent);
+      transition: width 0.2s, height 0.2s, border-color 0.2s, opacity 0.2s;
+      opacity: 0.5;
+    }
+
+    body:hover .cursor-outline {
+      opacity: 0.8;
+    }
+
+    .cursor-outline.hover {
+      width: 56px;
+      height: 56px;
+      border-color: var(--color-secondary);
+      background: rgba(139, 92, 246, 0.05);
+      opacity: 1;
+    }
+
+    @media (pointer: coarse) {
+
+      .cursor-dot,
+      .cursor-outline {
+        display: none;
+      }
+    }
+
+    /* ============================================
+           5. THREE.JS CANVAS LAYERS
+        ============================================ */
+    #canvas-hero {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    #canvas-particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    /* ============================================
+           6. NAVIGATION
+        ============================================ */
+    .nav-root {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      transition: var(--transition-base);
+      border-bottom: 1px solid transparent;
+    }
+
+    .nav-root.scrolled {
+      background: rgba(5, 5, 8, 0.8);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom-color: var(--border-subtle);
+    }
+
+    [data-theme="light"] .nav-root.scrolled {
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    .nav-link {
+      position: relative;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 0.5rem 0;
+      transition: color 0.3s ease;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gradient-primary);
+      transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border-radius: 2px;
+    }
+
+    .nav-link:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-link.active {
+      color: var(--color-accent);
+    }
+
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    /* ============================================
+           7. GLASS MORPHISM COMPONENTS
+        ============================================ */
+    .glass-panel {
+      background: var(--bg-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      transition: var(--transition-base);
+    }
+
+    .glass-panel:hover {
+      border-color: var(--border-accent);
+      box-shadow: var(--shadow-glow), 0 20px 50px rgba(0, 0, 0, 0.3);
+      transform: translateY(-4px);
+    }
+
+    .glass-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: var(--transition-base);
+      position: relative;
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(0, 240, 255, 0.06), transparent 40%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .glass-card:hover::before {
+      opacity: 1;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(0, 240, 255, 0.2);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 240, 255, 0.08);
+    }
+
+    /* ============================================
+           8. TYPOGRAPHY & TEXT EFFECTS
+        ============================================ */
+    .text-gradient {
+      background: var(--gradient-primary);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .text-gradient-animate {
+      background: linear-gradient(90deg, var(--color-accent), var(--color-secondary), var(--color-tertiary), var(--color-accent));
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradient-shift 6s ease infinite;
+    }
+
+    @keyframes gradient-shift {
+
+      0%,
+      100% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+    }
+
+    .scramble-text {
+      display: inline-block;
+      font-family: var(--font-mono);
+    }
+
+    /* ============================================
+           9. BUTTONS & INTERACTIVE ELEMENTS
+        ============================================ */
+    .btn-primary {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.875rem 2rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: white;
+      background: var(--gradient-primary);
+      border: none;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      overflow: hidden;
+      transition: var(--transition-base);
+      box-shadow: 0 4px 20px rgba(0, 240, 255, 0.2);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(0, 240, 255, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.875rem 2rem;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      background: transparent;
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--color-accent);
+      color: var(--color-accent);
+      background: rgba(0, 240, 255, 0.05);
+    }
+
+    .magnetic {
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ============================================
+           10. SECTION LAYOUTS
+        ============================================ */
+    .section-padding {
+      padding-top: var(--space-2xl);
+      padding-bottom: var(--space-2xl);
+    }
+
+    .grid-pattern {
+      background-image: radial-gradient(circle at 1px 1px, var(--border-subtle) 1px, transparent 0);
+      background-size: 40px 40px;
+      mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+      -webkit-mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+    }
+
+    /* ============================================
+           11. ANIMATIONS
+        ============================================ */
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    @keyframes pulse-glow {
+
+      0%,
+      100% {
+        opacity: 0.6;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes reveal-up {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-float {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-reveal {
+      opacity: 0;
+      animation: reveal-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .stagger-1 {
+      animation-delay: 0.1s;
+    }
+
+    .stagger-2 {
+      animation-delay: 0.2s;
+    }
+
+    .stagger-3 {
+      animation-delay: 0.3s;
+    }
+
+    .stagger-4 {
+      animation-delay: 0.4s;
+    }
+
+    .stagger-5 {
+      animation-delay: 0.5s;
+    }
+
+    /* ============================================
+           12. TIMELINE
+        ============================================ */
+    .timeline-container {
+      position: relative;
+    }
+
+    .timeline-line {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--color-accent), var(--color-secondary), transparent);
+      transform: translateX(-50%);
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 16px;
+      height: 16px;
+      background: var(--bg-primary);
+      border: 3px solid var(--color-accent);
+      border-radius: 50%;
+      z-index: 10;
+      box-shadow: 0 0 0 4px rgba(0, 240, 255, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      .timeline-line {
+        left: 20px;
+      }
+
+      .timeline-dot {
+        left: 20px;
+      }
+    }
+
+    /* ============================================
+           13. PORTFOLIO & TEAM CARDS
+        ============================================ */
+    .portfolio-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+    }
+
+    .portfolio-card img {
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .portfolio-card:hover img {
+      transform: scale(1.08);
+    }
+
+    .portfolio-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.85), rgba(139, 92, 246, 0.85));
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .portfolio-card:hover .portfolio-overlay {
+      opacity: 1;
+    }
+
+    .team-card-image {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .team-card-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, var(--bg-primary) 0%, transparent 60%);
+      opacity: 0.8;
+    }
+
+    /* ============================================
+           14. TECH STACK ICONS
+        ============================================ */
+    .tech-icon-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.5rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-glass);
+      transition: var(--transition-base);
+      cursor: default;
+    }
+
+    .tech-icon-wrap:hover {
+      border-color: var(--border-accent);
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 10px 30px rgba(0, 240, 255, 0.1);
+    }
+
+    .tech-icon-wrap i {
+      font-size: 2rem;
+      color: var(--color-accent);
+      transition: color 0.3s;
+    }
+
+    .tech-icon-wrap:hover i {
+      color: var(--color-secondary);
+    }
+
+    /* ============================================
+           15. CONTACT FORM
+        ============================================ */
+    .form-input {
+      width: 100%;
+      padding: 0.875rem 1.25rem;
+      background: var(--bg-glass);
+      border: 1.5px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-size: 0.9375rem;
+      transition: var(--transition-base);
+      outline: none;
+    }
+
+    .form-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .form-input:focus {
+      border-color: var(--color-accent);
+      box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.1), 0 0 20px rgba(0, 240, 255, 0.05);
+    }
+
+    textarea.form-input {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    /* ============================================
+           16. LANGUAGE DROPDOWN
+        ============================================ */
+    .lang-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      min-width: 200px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.5rem;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px);
+      transition: all 0.25s ease;
+      z-index: 50;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .lang-trigger:hover .lang-menu,
+    .lang-menu:hover {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .lang-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.625rem 0.875rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .lang-item:hover {
+      background: var(--bg-glass);
+      color: var(--text-primary);
+    }
+
+    .lang-item.active {
+      color: var(--color-accent);
+    }
+
+    /* ============================================
+           17. TOAST NOTIFICATION
+        ============================================ */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      padding: 1rem 1.5rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--color-accent);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transform: translateX(150%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 99999;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+
+    /* ============================================
+           18. FOOTER
+        ============================================ */
+    .footer-wave {
+      position: absolute;
+      top: -80px;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
+      line-height: 0;
+    }
+
+    .footer-wave svg {
+      position: relative;
+      display: block;
+      width: calc(100% + 1.3px);
+      height: 80px;
+    }
+
+    /* ============================================
+           19. RESPONSIVE
+        ============================================ */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem !important;
+      }
+
+      .section-padding {
+        padding-top: var(--space-xl);
+        padding-bottom: var(--space-xl);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-title {
+        font-size: 2rem !important;
+      }
+    }
+
+    /* ============================================
+           20. RTL SUPPORT
+        ============================================ */
+    [dir="rtl"] .lang-menu {
+      right: auto;
+      left: 0;
+    }
+
+    [dir="rtl"] .nav-link::after {
+      left: auto;
+      right: 0;
+    }
+
+    [dir="rtl"] .timeline-line {
+      left: auto;
+      right: 50%;
+      transform: translateX(50%);
+    }
+
+    [dir="rtl"] .timeline-dot {
+      left: auto;
+      right: 50%;
+      transform: translateX(50%);
+    }
+
+    @media (max-width: 768px) {
+      [dir="rtl"] .timeline-line {
+        right: 20px;
+      }
+
+      [dir="rtl"] .timeline-dot {
+        right: 20px;
+      }
+    }
+
+    /* ============================================
+           21. PRINT STYLES
+        ============================================
+        */
+    @media print {
+
+      .no-print,
+      #canvas-particles,
+      #canvas-hero,
+      .cursor-dot,
+      .cursor-outline,
+      #loading-screen {
+        display: none !important;
+      }
+
+      body {
+        background: white !important;
+        color: black !important;
+      }
+    }
+
+    /* ============================================
+           22. REDUCED MOTION
+        ============================================ */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
 </head>
-<body>
-  <h1>App Ads Verification</h1>
+
+<body class="antialiased selection:bg-teal-400 selection:text-black">
+
+  <!-- ============================================
+         LOADING SCREEN
+    ============================================ -->
+  <div id="loading-screen">
+    <div class="loader-ring"></div>
+    <div class="loader-text" id="loader-text">INITIALIZING RUPA ENGINE...</div>
+    <div class="loader-bar">
+      <div class="loader-progress" id="loader-progress"></div>
+    </div>
+    <div class="text-xs text-gray-600 mt-2 font-mono" id="loader-detail">Loading Three.js modules</div>
+  </div>
+
+  <!-- ============================================
+         CUSTOM CURSOR
+    ============================================ -->
+  <div class="cursor-dot hidden md:block" id="cursor-dot"></div>
+  <div class="cursor-outline hidden md:block" id="cursor-outline"></div>
+
+  <!-- ============================================
+         BACKGROUND PARTICLE CANVAS
+    ============================================ -->
+  <canvas id="canvas-particles"></canvas>
+
+  <!-- ============================================
+         NAVIGATION
+    ============================================ -->
+  <nav class="nav-root" id="navbar">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <!-- Logo -->
+        <a href="#home" class="flex items-center gap-3 group z-10">
+          <div
+            class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-400 to-violet-600 flex items-center justify-center text-white font-bold text-xl font-['Space_Grotesk'] group-hover:rotate-12 transition-transform duration-300 shadow-lg shadow-teal-500/20">
+            R
+          </div>
+          <div>
+            <h1 class="text-xl font-bold tracking-tight font-['Space_Grotesk'] text-gradient-animate">RUPA</h1>
+            <p class="text-[10px] text-gray-500 tracking-[0.2em] uppercase font-medium">Developers</p>
+          </div>
+        </a>
+
+        <!-- Desktop Nav -->
+        <div class="hidden lg:flex items-center gap-8" id="nav-links">
+          <!-- Links injected by JS -->
+        </div>
+
+        <!-- Right Side -->
+        <div class="hidden lg:flex items-center gap-4">
+          <!-- Language -->
+          <div class="relative lang-trigger">
+            <button
+              class="flex items-center gap-2 px-3 py-2 rounded-lg border border-white/10 hover:border-teal-500/30 hover:bg-white/5 transition-all text-sm text-gray-300"
+              id="lang-btn">
+              <i class="fas fa-globe text-teal-400"></i>
+              <span id="current-lang-label">EN</span>
+              <i class="fas fa-chevron-down text-xs opacity-60"></i>
+            </button>
+            <div class="lang-menu" id="lang-menu">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+
+          <!-- Theme Toggle -->
+          <button onclick="toggleTheme()"
+            class="w-10 h-10 rounded-lg border border-white/10 hover:border-teal-500/30 hover:bg-white/5 flex items-center justify-center transition-all text-gray-300"
+            title="Toggle Theme">
+            <i class="fas fa-moon" id="theme-icon"></i>
+          </button>
+
+          <!-- CTA -->
+          <a href="#contact" class="btn-primary text-sm py-2.5 px-5">
+            <span data-i18n="nav_cta">Start Project</span>
+          </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button class="lg:hidden text-white text-2xl z-50" onclick="toggleMobileMenu()" aria-label="Menu">
+          <i class="fas fa-bars" id="mobile-menu-icon"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu"
+      class="fixed inset-0 bg-black/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center gap-8 opacity-0 pointer-events-none transition-opacity duration-300 lg:hidden">
+      <div class="flex flex-col items-center gap-6 text-2xl font-['Space_Grotesk']" id="mobile-nav-links">
+        <!-- Injected by JS -->
+      </div>
+      <div class="flex gap-4 mt-8" id="mobile-lang-buttons">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================
+         HERO SECTION
+    ============================================ -->
+  <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+    <canvas id="canvas-hero"></canvas>
+    <div class="absolute inset-0 grid-pattern opacity-30 pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div
+        class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-teal-500/20 bg-teal-500/5 mb-8 animate-reveal">
+        <span class="w-1.5 h-1.5 rounded-full bg-teal-400 animate-pulse"></span>
+        <span class="text-sm text-teal-400 font-medium tracking-wide" data-i18n="hero_badge">Next Gen Digital
+          Agency</span>
+      </div>
+
+      <h1 class="hero-title text-5xl md:text-7xl lg:text-[7rem] mb-6 animate-reveal stagger-1">
+        <span class="block text-gradient" data-i18n="hero_title">RUPA</span>
+      </h1>
+
+      <h2
+        class="text-xl md:text-3xl lg:text-4xl text-gray-400 font-light mb-8 animate-reveal stagger-2 max-w-4xl mx-auto leading-snug">
+        <span data-i18n="hero_subtitle_prefix">We craft</span>
+        <span class="text-white font-semibold scramble-text" id="scramble-target">digital realities</span>
+      </h2>
+
+      <p class="text-base md:text-lg text-gray-500 max-w-2xl mx-auto mb-12 leading-relaxed animate-reveal stagger-3"
+        data-i18n="hero_desc">
+        Architecting immersive web experiences, intelligent applications, and boundary-pushing 3D environments for the
+        modern world.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-reveal stagger-4">
+        <a href="#portfolio" class="btn-primary magnetic">
+          <span data-i18n="hero_cta_primary">Explore Work</span>
+          <i class="fas fa-arrow-right text-sm"></i>
+        </a>
+        <a href="#contact" class="btn-secondary magnetic">
+          <span data-i18n="hero_cta_secondary">Get in Touch</span>
+          <i class="fas fa-envelope text-sm"></i>
+        </a>
+      </div>
+
+      <!-- Hero Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-24 animate-reveal stagger-5">
+        <div class="text-center">
+          <div class="text-4xl md:text-5xl font-bold font-['Space_Grotesk'] text-gradient mb-1 counter"
+            data-target="150">0</div>
+          <div class="text-sm text-gray-500 uppercase tracking-wider" data-i18n="stat_projects">Projects</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl md:text-5xl font-bold font-['Space_Grotesk'] text-gradient mb-1 counter"
+            data-target="48">0</div>
+          <div class="text-sm text-gray-500 uppercase tracking-wider" data-i18n="stat_clients">Clients</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl md:text-5xl font-bold font-['Space_Grotesk'] text-gradient mb-1 counter" data-target="5">
+            0</div>
+          <div class="text-sm text-gray-500 uppercase tracking-wider" data-i18n="stat_years">Years</div>
+        </div>
+        <div class="text-center">
+          <div class="text-4xl md:text-5xl font-bold font-['Space_Grotesk'] text-gradient mb-1 counter"
+            data-target="18">0</div>
+          <div class="text-sm text-gray-500 uppercase tracking-wider" data-i18n="stat_team">Team</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-60 animate-bounce">
+      <span class="text-[10px] uppercase tracking-widest text-gray-500" data-i18n="scroll">Scroll</span>
+      <div class="w-5 h-8 rounded-full border border-gray-600 flex items-start justify-center p-1.5">
+        <div class="w-1 h-2 bg-teal-400 rounded-full animate-pulse"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+         ABOUT SECTION
+    ============================================ -->
+  <section id="about" class="section-padding relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+        <div class="gsap-reveal">
+          <div
+            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-violet-500/20 bg-violet-500/5 mb-6">
+            <i class="fas fa-fingerprint text-violet-400 text-sm"></i>
+            <span class="text-sm text-violet-400 font-medium" data-i18n="about_label">Who We Are</span>
+          </div>
+          <h2 class="hero-title text-4xl md:text-5xl lg:text-6xl mb-6 leading-tight">
+            <span data-i18n="about_title_1">Building the</span>
+            <br>
+            <span class="text-gradient" data-i18n="about_title_2">Impossible</span>
+          </h2>
+          <p class="text-gray-400 text-lg leading-relaxed mb-6" data-i18n="about_p1">
+            Founded by Rudra Kukadiya and Parth Sangani, RUPA Developers is a powerhouse of innovation. We merge
+            artistry with engineering to create software that doesn't just function—it inspires.
+          </p>
+          <p class="text-gray-500 leading-relaxed mb-8" data-i18n="about_p2">
+            From immersive 3D web experiences powered by Three.js to scalable cloud architectures and intelligent AI
+            integrations, our team operates at the intersection of design and deep technology.
+          </p>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="glass-panel p-5">
+              <i class="fas fa-bullseye text-2xl text-teal-400 mb-3"></i>
+              <h3 class="font-semibold mb-1" data-i18n="mission">Mission</h3>
+              <p class="text-sm text-gray-500" data-i18n="mission_text">To engineer digital excellence that transcends
+                conventional boundaries.</p>
+            </div>
+            <div class="glass-panel p-5">
+              <i class="fas fa-eye text-2xl text-violet-400 mb-3"></i>
+              <h3 class="font-semibold mb-1" data-i18n="vision">Vision</h3>
+              <p class="text-sm text-gray-500" data-i18n="vision_text">To be the architects of tomorrow's
+                internet—immersive, intelligent, and inclusive.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative gsap-reveal">
+          <div class="relative z-10 glass-card p-2">
+            <div class="relative rounded-lg overflow-hidden bg-black/40 aspect-[4/3] flex items-center justify-center">
+              <!-- Decorative Code Window -->
+              <div class="w-full h-full p-6 font-mono text-xs sm:text-sm overflow-hidden">
+                <div class="flex items-center gap-2 mb-4 border-b border-white/10 pb-3">
+                  <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                  <span class="ml-2 text-gray-600 text-[10px]">rupa-core.js</span>
+                </div>
+                <div class="space-y-1 text-gray-400">
+                  <p><span class="text-purple-400">import</span> { <span class="text-teal-400">Innovation</span> } <span
+                      class="text-purple-400">from</span> <span class="text-orange-400">'@rupa/engine'</span>;</p>
+                  <p><span class="text-purple-400">import</span> { <span class="text-teal-400">ThreeWorld</span> } <span
+                      class="text-purple-400">from</span> <span class="text-orange-400">'@rupa/3d'</span>;</p>
+                  <p class="text-gray-600">// Initialize core systems</p>
+                  <p><span class="text-purple-400">const</span> <span class="text-teal-400">rupa</span> = <span
+                      class="text-purple-400">new</span> <span class="text-yellow-400">RUPA</span>({</p>
+                  <p class="pl-4">founders: [<span class="text-orange-400">'Rudra'</span>, <span
+                      class="text-orange-400">'Parth'</span>],</p>
+                  <p class="pl-4">mission: <span class="text-orange-400">'Excellence'</span>,</p>
+                  <p class="pl-4">stack: [<span class="text-orange-400">'Three.js'</span>, <span
+                      class="text-orange-400">'React'</span>, <span class="text-orange-400">'Node'</span>],</p>
+                  <p>});</p>
+                  <p class="animate-pulse text-teal-400 mt-2">> Ready to deploy... 🚀</p>
+                </div>
+              </div>
+              <!-- Glow behind -->
+              <div class="absolute -inset-1 bg-gradient-to-r from-teal-500/20 to-violet-500/20 blur-2xl -z-10"></div>
+            </div>
+          </div>
+          <!-- Floating decorations -->
+          <div
+            class="absolute -top-6 -right-6 w-24 h-24 border border-teal-500/20 rounded-2xl rotate-12 hidden lg:block">
+          </div>
+          <div class="absolute -bottom-6 -left-6 w-32 h-32 border border-violet-500/20 rounded-full hidden lg:block">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+         SERVICES SECTION
+    ============================================ -->
+  <section id="services" class="section-padding relative">
+    <div class="absolute inset-0 grid-pattern opacity-20 pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center mb-20 gsap-reveal">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-rose-500/20 bg-rose-500/5 mb-6">
+          <i class="fas fa-layer-group text-rose-400 text-sm"></i>
+          <span class="text-sm text-rose-400 font-medium" data-i18n="services_label">Capabilities</span>
+        </div>
+        <h2 class="hero-title text-4xl md:text-5xl lg:text-6xl mb-6">
+          <span data-i18n="services_title">Our</span>
+          <span class="text-gradient"> Arsenal</span>
+        </h2>
+        <p class="text-gray-400 max-w-2xl mx-auto text-lg" data-i18n="services_desc">
+          Full-spectrum digital craftsmanship—from concept to deployment.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6" id="services-grid">
+        <!-- Services injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+         TECH STACK SECTION
+    ============================================ -->
+  <section class="section-padding relative border-y border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 gsap-reveal">
+        <h3 class="text-2xl md:text-3xl font-bold mb-4 font-['Space_Grotesk']" data-i18n="tech_title">Technologies We
+          Master</h3>
+        <p class="text-gray-500" data-i18n="tech_desc">Our engineering stack is modern, scalable, and battle-tested.</p>
+      </div>
+      <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4" id="tech-grid">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+         PORTFOLIO SECTION
+    ============================================ -->
+  <section id="portfolio" class="section-padding relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between mb-16 gap-6 gsap-reveal">
+        <div>
+          <div
+            class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-teal-500/20 bg-teal-500/5 mb-6">
+            <i class="fas fa-shapes text-teal-400 text-sm"></i>
+            <span class="text-sm text-teal-400 font-medium" data-i18n="portfolio_label">Portfolio</span>
+          </div>
+          <h2 class="hero-title text-4xl md:text-5xl lg:text-6xl mb-4">
+            <span data-i18n="portfolio_title">Selected</span>
+            <span class="text-gradient"> Works</span>
+          </h2>
+        </div>
+        <div class="flex gap-2 flex-wrap" id="portfolio-filters">
+          <button
+            class="filter-btn active px-4 py-2 rounded-lg text-sm border border-teal-500/30 bg-teal-500/10 text-teal-400 transition-all"
+            data-filter="all" data-i18n="filter_all">All</button>
+          <button
+            class="filter-btn px-4 py-2 rounded-lg text-sm border border-white/10 text-gray-400 hover:border-teal-500/30 hover:text-teal-400 transition-all"
+            data-filter="web" data-i18n="filter_web">Web</button>
+          <button
+            class="filter-btn px-4 py-2 rounded-lg text-sm border border-white/10 text-gray-400 hover:border-teal-500/30 hover:text-teal-400 transition-all"
+            data-filter="3d" data-i18n="filter_3d">3D</button>
+          <button
+            class="filter-btn px-4 py-2 rounded-lg text-sm border border-white/10 text-gray-400 hover:border-teal-500/30 hover:text-teal-400 transition-all"
+            data-filter="app" data-i18n="filter_app">App</button>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="portfolio-grid">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+         PROCESS / TIMELINE SECTION
+    ============================================ -->
+  <section class="section-padding relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-20 gsap-reveal">
+        <h2 class="hero-title text-4xl md:text-5xl font-bold mb-6" data-i18n="process_title">Our Process</h2>
+        <p class="text-gray-400 text-lg" data-i18n="process_desc">A battle-tested methodology for digital success.</p>
+      </div>
+
+      <div class="timeline-container relative" id="timeline-container">
+        <div class="timeline-line"></div>
+        <!-- Timeline items injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+         TEAM SECTION
+    ============================================ -->
+  <section id="team" class="section-padding relative border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-20 gsap-reveal">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-violet-500/20 bg-violet-500/5 mb-6">
+          <i class="fas fa-user-astronaut text-violet-400 text-sm"></i>
+          <span class="text-sm text-violet-400 font-medium" data-i18n="team_label">The Minds</span>
+        </div>
+        <h2 class="hero-title text-4xl md:text-5xl lg:text-6xl mb-6">
+          <span data-i18n="team_title">Meet the</span>
+          <span class="text-gradient"> Architects</span>
+        </h2>
+      </div>
+
+      <!-- Founders Highlight -->
+      <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16">
+        <!-- Rudra Kukadiya -->
+        <div class="glass-card overflow-hidden gsap-reveal group">
+          <div class="team-card-image aspect-[4/3]">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop&crop=face"
+              alt="Rudra Kukadiya"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+          </div>
+          <div class="p-6 relative z-10">
+            <h3 class="text-xl font-bold mb-1 font-['Space_Grotesk']">Rudra Kukadiya</h3>
+            <p class="text-teal-400 text-sm font-medium mb-3" data-i18n="rudra_role">Co-Founder & Chief Executive
+              Officer</p>
+            <p class="text-gray-400 text-sm leading-relaxed mb-4" data-i18n="rudra_bio">
+              Visionary technologist and full-stack architect. Rudra drives RUPA's strategic direction, ensuring every
+              project exceeds industry standards in performance and scalability.
+            </p>
+            <div class="flex gap-3">
+              <a href="mailto:rupadevelopers111444@gmail.com"
+                class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:bg-teal-500/20 hover:text-teal-400 transition-all"><i
+                  class="fas fa-envelope text-sm"></i></a>
+              <a href="#"
+                class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:bg-teal-500/20 hover:text-teal-400 transition-all"><i
+                  class="fab fa-linkedin-in text-sm"></i></a>
+              <a href="#"
+                class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:bg-teal-500/20 hover:text-teal-400 transition-all"><i
+                  class="fab fa-github text-sm"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Parth Sangani -->
+        <div class="glass-card overflow-hidden gsap-reveal group" style="transition-delay: 0.15s;">
+          <div class="team-card-image aspect-[4/3]">
+            <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=800&h=600&fit=crop&crop=face"
+              alt="Parth Sangani"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+          </div>
+          <div class="p-6 relative z-10">
+            <h3 class="text-xl font-bold mb-1 font-['Space_Grotesk']">Parth Sangani</h3>
+            <p class="text-violet-400 text-sm font-medium mb-3" data-i18n="parth_role">Co-Founder & Chief Technology
+              Officer</p>
+            <p class="text-gray-400 text-sm leading-relaxed mb-4" data-i18n="parth_bio">
+              Creative engineer specializing in 3D web, WebGL shaders, and AI integration. Parth leads the technical
+              R&D, turning complex challenges into elegant digital realities.
+            </p>
+            <div class="flex gap-3">
+              <a href="mailto:cocrudra111@gmail.com"
+                class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:bg-violet-500/20 hover:text-violet-400 transition-all"><i
+                  class="fas fa-envelope text-sm"></i></a>
+              <a href="#"
+                class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:bg-violet-500/20 hover:text-violet-400 transition-all"><i
+                  class="fab fa-linkedin-in text-sm"></i></a>
+              <a href="#"
+                class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:bg-violet-500/20 hover:text-violet-400 transition-all"><i
+                  class="fab fa-github text-sm"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+         TESTIMONIALS SECTION
+    ============================================ -->
+  <section class="section-padding relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 gsap-reveal">
+        <h2 class="hero-title text-4xl md:text-5xl font-bold mb-6" data-i18n="testimonials_title">Client Voices</h2>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8" id="testimonials-grid">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+         CONTACT SECTION
+    ============================================ -->
+  <section id="contact" class="section-padding relative">
+    <div class="absolute inset-0 grid-pattern opacity-20 pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center mb-20 gsap-reveal">
+        <div
+          class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-teal-500/20 bg-teal-500/5 mb-6">
+          <i class="fas fa-paper-plane text-teal-400 text-sm"></i>
+          <span class="text-sm text-teal-400 font-medium" data-i18n="contact_label">Start a Conversation</span>
+        </div>
+        <h2 class="hero-title text-4xl md:text-5xl lg:text-6xl mb-6">
+          <span data-i18n="contact_title">Let's Create</span>
+          <span class="text-gradient"> Together</span>
+        </h2>
+      </div>
+
+      <div class="grid lg:grid-cols-5 gap-12">
+        <!-- Contact Info -->
+        <div class="lg:col-span-2 space-y-6 gsap-reveal">
+          <div class="glass-panel p-6">
+            <div
+              class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center mb-4 text-white">
+              <i class="fas fa-envelope"></i>
+            </div>
+            <h3 class="font-semibold text-lg mb-1" data-i18n="contact_general">General Inquiries</h3>
+            <a href="mailto:rupadevelopers111444@gmail.com"
+              class="text-teal-400 hover:text-teal-300 transition-colors break-all">rupadevelopers111444@gmail.com</a>
+          </div>
+
+          <div class="glass-panel p-6">
+            <div
+              class="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center mb-4 text-white">
+              <i class="fas fa-headset"></i>
+            </div>
+            <h3 class="font-semibold text-lg mb-1" data-i18n="contact_query">Query Support</h3>
+            <a href="mailto:cocrudra111@gmail.com"
+              class="text-violet-400 hover:text-violet-300 transition-colors break-all">cocrudra111@gmail.com</a>
+          </div>
+
+          <div class="glass-panel p-6">
+            <div
+              class="w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 to-orange-600 flex items-center justify-center mb-4 text-white">
+              <i class="fas fa-clock"></i>
+            </div>
+            <h3 class="font-semibold text-lg mb-1" data-i18n="contact_hours_label">Availability</h3>
+            <p class="text-gray-400">Mon - Sat: 9:00 AM - 8:00 PM IST</p>
+          </div>
+        </div>
+
+        <!-- Form -->
+        <div class="lg:col-span-3 gsap-reveal" style="transition-delay: 0.2s;">
+          <form class="glass-card p-8 space-y-6" id="contact-form" onsubmit="handleContactSubmit(event)">
+            <div class="grid sm:grid-cols-2 gap-6">
+              <div>
+                <label class="block text-sm text-gray-400 mb-2" data-i18n="form_name">Full Name</label>
+                <input type="text" class="form-input" placeholder="John Doe" required>
+              </div>
+              <div>
+                <label class="block text-sm text-gray-400 mb-2" data-i18n="form_email">Email Address</label>
+                <input type="email" class="form-input" placeholder="john@company.com" required>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm text-gray-400 mb-2" data-i18n="form_subject">Subject</label>
+              <input type="text" class="form-input" placeholder="Project Inquiry" required>
+            </div>
+            <div>
+              <label class="block text-sm text-gray-400 mb-2" data-i18n="form_service">Service Required</label>
+              <select class="form-input bg-transparent">
+                <option value="" class="bg-[#0a0a12]" data-i18n="form_select">Select a service...</option>
+                <option value="web" class="bg-[#0a0a12]">Web Development</option>
+                <option value="mobile" class="bg-[#0a0a12]">Mobile App</option>
+                <option value="3d" class="bg-[#0a0a12]">3D / WebGL Experience</option>
+                <option value="ai" class="bg-[#0a0a12]">AI / ML Integration</option>
+                <option value="ui" class="bg-[#0a0a12]">UI/UX Design</option>
+                <option value="other" class="bg-[#0a0a12]" data-i18n="form_other">Other</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm text-gray-400 mb-2" data-i18n="form_message">Your Message</label>
+              <textarea class="form-input" placeholder="Tell us about your vision..." required></textarea>
+            </div>
+            <button type="submit" class="btn-primary w-full justify-center">
+              <span data-i18n="form_submit">Send Message</span>
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+         FOOTER
+    ============================================ -->
+  <footer class="relative pt-20 pb-8 bg-[#020205] border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-4 gap-12 mb-16">
+        <div class="md:col-span-1">
+          <div class="flex items-center gap-3 mb-6">
+            <div
+              class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-400 to-violet-600 flex items-center justify-center text-white font-bold font-['Space_Grotesk']">
+              R</div>
+            <div>
+              <h4 class="text-lg font-bold font-['Space_Grotesk']">RUPA</h4>
+              <p class="text-[10px] text-gray-600 tracking-widest uppercase">Developers</p>
+            </div>
+          </div>
+          <p class="text-sm text-gray-500 leading-relaxed mb-6" data-i18n="footer_desc">
+            Engineering tomorrow's digital landscape with precision, creativity, and purpose.
+          </p>
+          <div class="flex gap-3">
+            <a href="#"
+              class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 hover:text-teal-400 hover:bg-teal-500/10 transition-all"><i
+                class="fab fa-linkedin-in"></i></a>
+            <a href="#"
+              class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 hover:text-teal-400 hover:bg-teal-500/10 transition-all"><i
+                class="fab fa-github"></i></a>
+            <a href="#"
+              class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 hover:text-teal-400 hover:bg-teal-500/10 transition-all"><i
+                class="fab fa-twitter"></i></a>
+            <a href="#"
+              class="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center text-gray-500 hover:text-teal-400 hover:bg-teal-500/10 transition-all"><i
+                class="fab fa-instagram"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-semibold mb-6 text-sm uppercase tracking-wider text-gray-300" data-i18n="footer_links">Company
+          </h4>
+          <ul class="space-y-3 text-sm text-gray-500">
+            <li><a href="#about" class="hover:text-teal-400 transition-colors" data-i18n="nav_about">About</a></li>
+            <li><a href="#services" class="hover:text-teal-400 transition-colors" data-i18n="nav_services">Services</a>
+            </li>
+            <li><a href="#portfolio" class="hover:text-teal-400 transition-colors"
+                data-i18n="nav_portfolio">Portfolio</a></li>
+            <li><a href="#team" class="hover:text-teal-400 transition-colors" data-i18n="nav_team">Team</a></li>
+            <li><a href="#contact" class="hover:text-teal-400 transition-colors" data-i18n="nav_contact">Contact</a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-semibold mb-6 text-sm uppercase tracking-wider text-gray-300" data-i18n="footer_services">
+            Services</h4>
+          <ul class="space-y-3 text-sm text-gray-500">
+            <li><a href="#services" class="hover:text-teal-400 transition-colors">Web Development</a></li>
+            <li><a href="#services" class="hover:text-teal-400 transition-colors">Mobile Applications</a></li>
+            <li><a href="#services" class="hover:text-teal-400 transition-colors">3D & WebGL</a></li>
+            <li><a href="#services" class="hover:text-teal-400 transition-colors">AI Solutions</a></li>
+            <li><a href="#services" class="hover:text-teal-400 transition-colors">UI/UX Design</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-semibold mb-6 text-sm uppercase tracking-wider text-gray-300" data-i18n="footer_contact">
+            Contact</h4>
+          <ul class="space-y-3 text-sm text-gray-500">
+            <li class="flex items-start gap-3">
+              <i class="fas fa-envelope mt-1 text-teal-500/50"></i>
+              <div>
+                <p class="text-xs text-gray-600 mb-0.5" data-i18n="contact_general">General</p>
+                <a href="mailto:rupadevelopers111444@gmail.com"
+                  class="hover:text-teal-400 transition-colors">rupadevelopers111444@gmail.com</a>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <i class="fas fa-headset mt-1 text-violet-500/50"></i>
+              <div>
+                <p class="text-xs text-gray-600 mb-0.5" data-i18n="contact_query">Queries</p>
+                <a href="mailto:cocrudra111@gmail.com"
+                  class="hover:text-violet-400 transition-colors">cocrudra111@gmail.com</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div
+        class="border-t border-white/5 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-gray-600">
+        <p> &copy; 2024 <span class="text-gray-400">RUPA Developers</span>. <span data-i18n="footer_rights">All rights
+            reserved.</span></p>
+        <div class="flex gap-6">
+          <a href="#" class="hover:text-gray-400 transition-colors">Privacy</a>
+          <a href="#" class="hover:text-gray-400 transition-colors">Terms</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle text-teal-400"></i>
+    <span id="toast-message" class="text-sm">Message sent!</span>
+  </div>
+
+  <!-- Back to Top -->
+  <button onclick="window.scrollTo({top:0, behavior:'smooth'})" id="back-to-top"
+    class="fixed bottom-8 right-8 w-12 h-12 rounded-full bg-gradient-to-r from-teal-500 to-violet-600 text-white flex items-center justify-center shadow-lg opacity-0 pointer-events-none transition-all duration-300 hover:scale-110 z-50">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- ============================================
+         JAVASCRIPT ENGINE
+    ============================================ -->
+  <script>
+    // ==========================================
+    // CONFIGURATION & STATE
+    // ==========================================
+    const CONFIG = {
+      lang: localStorage.getItem('rupa-lang') || 'en',
+      theme: localStorage.getItem('rupa-theme') || 'dark',
+      colors: {
+        accent: new THREE.Color(0x00f0ff),
+        secondary: new THREE.Color(0x8b5cf6),
+        tertiary: new THREE.Color(0xf43f5e)
+      }
+    };
+
+    const LANGUAGES = [
+      { code: 'en', name: 'English', flag: '🇺🇸', dir: 'ltr' },
+      { code: 'hi', name: 'हिन्दी', flag: '🇮🇳', dir: 'ltr' },
+      { code: 'gu', name: 'ગુજરાતી', flag: '🇮🇳', dir: 'ltr' },
+      { code: 'es', name: 'Español', flag: '🇪🇸', dir: 'ltr' },
+      { code: 'fr', name: 'Français', flag: '🇫🇷', dir: 'ltr' },
+      { code: 'de', name: 'Deutsch', flag: '🇩🇪', dir: 'ltr' },
+      { code: 'ja', name: '日本語', flag: '🇯🇵', dir: 'ltr' },
+      { code: 'zh', name: '中文', flag: '🇨🇳', dir: 'ltr' },
+      { code: 'ar', name: 'العربية', flag: '🇸🇦', dir: 'rtl' },
+      { code: 'ru', name: 'Русский', flag: '🇷🇺', dir: 'ltr' }
+    ];
+
+    // ==========================================
+    // TRANSLATION DICTIONARY
+    // ==========================================
+    const i18n = {
+      en: {
+        nav_home: 'Home', nav_about: 'About', nav_services: 'Services', nav_portfolio: 'Portfolio', nav_team: 'Team', nav_contact: 'Contact',
+        nav_cta: 'Start Project', hero_badge: 'Next Gen Digital Agency', hero_title: 'RUPA', hero_subtitle_prefix: 'We craft',
+        hero_desc: 'Architecting immersive web experiences, intelligent applications, and boundary-pushing 3D environments for the modern world.',
+        hero_cta_primary: 'Explore Work', hero_cta_secondary: 'Get in Touch', scroll: 'Scroll',
+        stat_projects: 'Projects', stat_clients: 'Clients', stat_years: 'Years', stat_team: 'Team',
+        about_label: 'Who We Are', about_title_1: 'Building the', about_title_2: 'Impossible',
+        about_p1: 'Founded by Rudra Kukadiya and Parth Sangani, RUPA Developers is a powerhouse of innovation. We merge artistry with engineering to create software that doesn\'t just function—it inspires.',
+        about_p2: 'From immersive 3D web experiences powered by Three.js to scalable cloud architectures and intelligent AI integrations, our team operates at the intersection of design and deep technology.',
+        mission: 'Mission', mission_text: 'To engineer digital excellence that transcends conventional boundaries.',
+        vision: 'Vision', vision_text: 'To be the architects of tomorrow\'s internet—immersive, intelligent, and inclusive.',
+        services_label: 'Capabilities', services_title: 'Our', services_desc: 'Full-spectrum digital craftsmanship—from concept to deployment.',
+        tech_title: 'Technologies We Master', tech_desc: 'Our engineering stack is modern, scalable, and battle-tested.',
+        portfolio_label: 'Portfolio', portfolio_title: 'Selected', filter_all: 'All', filter_web: 'Web', filter_3d: '3D', filter_app: 'App',
+        process_title: 'Our Process', process_desc: 'A battle-tested methodology for digital success.',
+        team_label: 'The Minds', team_title: 'Meet the', rudra_role: 'Co-Founder & CEO', parth_role: 'Co-Founder & CTO',
+        rudra_bio: 'Visionary technologist and full-stack architect. Rudra drives RUPA\'s strategic direction, ensuring every project exceeds industry standards in performance and scalability.',
+        parth_bio: 'Creative engineer specializing in 3D web, WebGL shaders, and AI integration. Parth leads the technical R&D, turning complex challenges into elegant digital realities.',
+        testimonials_title: 'Client Voices',
+        contact_label: 'Start a Conversation', contact_title: 'Let\'s Create', contact_general: 'General Inquiries', contact_query: 'Query Support',
+        contact_hours_label: 'Availability', form_name: 'Full Name', form_email: 'Email Address', form_subject: 'Subject',
+        form_service: 'Service Required', form_select: 'Select a service...', form_other: 'Other', form_message: 'Your Message', form_submit: 'Send Message',
+        footer_desc: 'Engineering tomorrow\'s digital landscape with precision, creativity, and purpose.',
+        footer_links: 'Company', footer_services: 'Services', footer_contact: 'Contact', footer_rights: 'All rights reserved.'
+      },
+      hi: {
+        nav_home: 'होम', nav_about: 'हमारे बारे में', nav_services: 'सेवाएं', nav_portfolio: 'पोर्टफोलियो', nav_team: 'टीम', nav_contact: 'संपर्क',
+        nav_cta: 'प्रोजेक्ट शुरू करें', hero_badge: 'नई पीढ़ी की डिजिटल एजेंसी', hero_title: 'RUPA', hero_subtitle_prefix: 'हम बनाते हैं',
+        hero_desc: 'आधुनिक दुनिया के लिए इमर्सिव वेब अनुभव, बुद्धिमान एप्लिकेशन और सीमा-पुशिंग 3D वातावरण का वास्तुकला।',
+        hero_cta_primary: 'काम देखें', hero_cta_secondary: 'संपर्क करें', scroll: 'स्क्रॉल',
+        stat_projects: 'परियोजनाएं', stat_clients: 'ग्राहक', stat_years: 'वर्ष', stat_team: 'टीम',
+        about_label: 'हम कौन हैं', about_title_1: 'असंभव को', about_title_2: 'बनाना',
+        about_p1: 'रुद्र कुकड़िया और पार्थ सांगनी द्वारा स्थापित, RUPA डेवलपर्स नवीनता का एक केंद्र है। हम कला और इंजीनियरिंग को मिलाकर ऐसा सॉफ्टवेयर बनाते हैं जो केवल काम करता ही नहीं, प्रेरित भी करता है।',
+        about_p2: 'Three.js द्वारा संचालित इमर्सिव 3D वेब अनुभवों से लेकर स्केलेबल क्लाउड आर्किटेक्चर और बुद्धिमान AI एकीकरण तक, हमारी टीम डिजाइन और गहरी तकनीक के चौराहे पर काम करती है।',
+        mission: 'लक्ष्य', mission_text: 'पारंपरिक सीमाओं से परे डिजिटल उत्कृष्टता का इंजीनियरिंग।',
+        vision: 'दृष्टि', vision_text: 'कल के इंटरनेट के वास्तुकार बनना—इमर्सिव, बुद्धिमान और समावेशी।',
+        services_label: 'क्षमताएं', services_title: 'हमारा', services_desc: 'अवधारणा से तैनाती तक फुल-स्पेक्ट्रम डिजिटल शिल्पकला।',
+        tech_title: 'हम जिन तकनीकों में माहिर हैं', tech_desc: 'हमारी इंजीनियरिंग स्टैक आधुनिक, स्केलेबल और बैटल-टेस्टेड है।',
+        portfolio_label: 'पोर्टफोलियो', portfolio_title: 'चयनित', filter_all: 'सभी', filter_web: 'वेब', filter_3d: '3D', filter_app: 'ऐप',
+        process_title: 'हमारी प्रक्रिया', process_desc: 'डिजिटल सफलता के लिए एक बैटल-टेस्टेड कार्यप्रणाली।',
+        team_label: 'दिमाग', team_title: 'वास्तुकारों से', rudra_role: 'सह-संस्थापक और सीईओ', parth_role: 'सह-संस्थापक और सीटीओ',
+        rudra_bio: 'दूरदर्शी तकनीकविद् और फुल-स्टैक आर्किटेक्ट। रुद्र RUPA की रणनीतिक दिशा को आगे बढ़ाते हैं, यह सुनिश्चित करते हुए कि हर परियोजना प्रदर्शन और स्केलेबिलिटी में उद्योग मानकों से अधिक है।',
+        parth_bio: '3D वेब, WebGL शेडर और AI एकीकरण में विशेषज्ञ रचनात्मक इंजीनियर। पार्थ तकनीकी R&D का नेतृत्व करते हैं, जटिल चुनौतियों को सुरुचिपूर्ण डिजिटल वास्तविकताओं में बदलते हैं।',
+        testimonials_title: 'ग्राहक की आवाज',
+        contact_label: 'बातचीत शुरू करें', contact_title: 'आइए बनाएं', contact_general: 'सामान्य पूछताछ', contact_query: 'क्वेरी सहायता',
+        contact_hours_label: 'उपलब्धता', form_name: 'पूरा नाम', form_email: 'ईमेल पता', form_subject: 'विषय',
+        form_service: 'आवश्यक सेवा', form_select: 'एक सेवा चुनें...', form_other: 'अन्य', form_message: 'आपका संदेश', form_submit: 'संदेश भेजें',
+        footer_desc: 'सटीकता, रचनात्मकता और उद्देश्य के साथ कल के डिजिटल परिदृश्य का इंजीनियरिंग।',
+        footer_links: 'कंपनी', footer_services: 'सेवाएं', footer_contact: 'संपर्क', footer_rights: 'सर्वाधिकार सुरक्षित।'
+      },
+      gu: {
+        nav_home: 'હોમ', nav_about: 'અમારા વિશે', nav_services: 'સેવાઓ', nav_portfolio: 'પોર્ટફોલિયો', nav_team: 'ટીમ', nav_contact: 'સંપર્ક',
+        nav_cta: 'પ્રોજેક્ટ શરૂ કરો', hero_badge: 'નવી પેઢીની ડિજિટલ એજન્સી', hero_title: 'RUPA', hero_subtitle_prefix: 'અમે બનાવીએ છીએ',
+        hero_desc: 'આધુનિક વિશ્વ માટે ઇમર્સિવ વેબ અનુભવો, બુદ્ધિશાળી એપ્લિકેશન્સ અને સીમાઓ તોડતા 3D વાતાવરણની રચના.',
+        hero_cta_primary: 'કામ જુઓ', hero_cta_secondary: 'સંપર્ક કરો', scroll: 'સ્ક્રોલ',
+        stat_projects: 'પ્રોજેક્ટ્સ', stat_clients: 'ગ્રાહકો', stat_years: 'વર્ષો', stat_team: 'ટીમ',
+        about_label: 'અમે કોણ છીએ', about_title_1: 'અશક્ય બનાવવું', about_title_2: 'એ જ અમારું કામ',
+        about_p1: 'રુદ્ર કુકડિયા અને પાર્થ સાંગણી દ્વારા સ્થાપિત, RUPA ડેવલપર્સ એ નવીનતાનું એક કેન્દ્ર છે. અમે કળા અને એન્જિનિયરિંગને ભેળવીને એવો સોફ્ટવેર બનાવીએ છીએ જે માત્ર કામ કરે છે—પણ પ્રેરણા આપે છે.',
+        about_p2: 'Three.js દ્વારા સંચાલિત ઇમર્સિવ 3D વેબ અનુભવોથી લઈને સ્કેલેબલ ક્લાઉડ આર્કિટેક્ચર અને બુદ્ધિશાળી AI એકીકરણ સુધી, અમારી ટીમ ડિઝાઇન અને ઊંડા તકનીકના ચોરાહે કામ કરે છે.',
+        mission: 'મિશન', mission_text: 'પરંપરાગત સીમાઓથી પરે ડિજિટલ ઉત્કૃષ્ટતાનું એન્જિનિયરિંગ.',
+        vision: 'દૃષ્ટિ', vision_text: 'આવતીકાલના ઇન્ટરનેટના આર્કિટેક્ટ બનવું—ઇમર્સિવ, બુદ્ધિશાળી અને સર્વસમાવેશી.',
+        services_label: 'ક્ષમતાઓ', services_title: 'અમારી', services_desc: 'પૂર્ણ-સ્પેક્ટ્રમ ડિજિટલ કારીગરી—ખ્યાલથી લઈ તૈનાતી સુધી.',
+        tech_title: 'અમે જે તકનીકોમાં નિપુણ છીએ', tech_desc: 'અમારી એન્જિનિયરિંગ સ્ટેક આધુનિક, સ્કેલેબલ અને બેટલ-ટેસ્ટેડ છે.',
+        portfolio_label: 'પોર્ટફોલિયો', portfolio_title: 'પસંદગીના', filter_all: 'બધા', filter_web: 'વેબ', filter_3d: '3D', filter_app: 'એપ',
+        process_title: 'અમારી પ્રક્રિયા', process_desc: 'ડિજિટલ સફળતા માટે એક બેટલ-ટેસ્ટેડ પદ્ધતિ.',
+        team_label: 'દિમાગ', team_title: 'આર્કિટેક્ટ્સને', rudra_role: 'સહ-સ્થાપક અને સીઈઓ', parth_role: 'સહ-સ્થાપક અને સીટીઓ',
+        rudra_bio: 'દૂરદર્શી ટેકનોલોજિસ્ટ અને ફુલ-સ્ટેક આર્કિટેક્ટ. રુદ્ર RUPAની રણનૈતિક દિશાને આગળ વધારે છે, દરેક પ્રોજેક્ટ પ્રદર્શન અને સ્કેલેબિલિટીમાં ઉદ્યોગ માપદંડથી વધારે છે તેની ખાતરી કરે છે.',
+        parth_bio: '3D વેબ, WebGL શેડર અને AI એકીકરણમાં નિપુણ સર્જનાત્મક એન્જિનિયર. પાર્થ ટેકનિકલ R&Dનું નેતૃત્વ કરે છે, જટિલ પડકારોને સુંદર ડિજિટલ વાસ્તવિકતાઓમાં ફેરવે છે.',
+        testimonials_title: 'ગ્રાહકોની અવાજ',
+        contact_label: 'સબદ શરૂ કરો', contact_title: 'ચાલો બનાવીએ', contact_general: 'સામાન્ય પૂછપરછ', contact_query: 'ક્વેરી સપોર્ટ',
+        contact_hours_label: 'ઉપલબ્ધતા', form_name: 'પૂરું નામ', form_email: 'ઇમેઇલ સરનામું', form_subject: 'વિષય',
+        form_service: 'જરૂરી સેવા', form_select: 'સેવા પસંદ કરો...', form_other: 'અન્ય', form_message: 'તમારો સંદેશ', form_submit: 'સંદેશ મોકલો',
+        footer_desc: 'ચોકસાઈ, સર્જનાત્મકતા અને હેતુ સાથે આવતીકાલના ડિજિટલ ભૂદૃશ્યનું એન્જિનિયરિંગ.',
+        footer_links: 'કંપની', footer_services: 'સેવાઓ', footer_contact: 'સંપર્ક', footer_rights: 'બધા અધિકારો સુરક્ષિત.'
+      },
+      es: {
+        nav_home: 'Inicio', nav_about: 'Nosotros', nav_services: 'Servicios', nav_portfolio: 'Portafolio', nav_team: 'Equipo', nav_contact: 'Contacto',
+        nav_cta: 'Iniciar Proyecto', hero_badge: 'Agencia Digital de Nueva Generación', hero_title: 'RUPA', hero_subtitle_prefix: 'Creamos',
+        hero_desc: 'Arquitectura de experiencias web inmersivas, aplicaciones inteligentes y entornos 3D que empujan los límites para el mundo moderno.',
+        hero_cta_primary: 'Explorar Trabajos', hero_cta_secondary: 'Contactar', scroll: 'Desplazar',
+        stat_projects: 'Proyectos', stat_clients: 'Clientes', stat_years: 'Años', stat_team: 'Equipo',
+        about_label: 'Quiénes Somos', about_title_1: 'Construyendo lo', about_title_2: 'Imposible',
+        about_p1: 'Fundada por Rudra Kukadiya y Parth Sangani, RUPA Developers es una potencia de innovación. Fusionamos arte e ingeniería para crear software que no solo funciona, sino que inspira.',
+        about_p2: 'Desde experiencias web 3D inmersivas impulsadas por Three.js hasta arquitecturas cloud escalables e integraciones de IA inteligente, nuestro equipo opera en la intersección del diseño y la tecnología profunda.',
+        mission: 'Misión', mission_text: 'Ingeniar la excelencia digital que trascienda los límites convencionales.',
+        vision: 'Visión', vision_text: 'Ser los arquitectos del internet del mañana: inmersivo, inteligente e inclusivo.',
+        services_label: 'Capacidades', services_title: 'Nuestro', services_desc: 'Artesanía digital de espectro completo, desde el concepto hasta el despliegue.',
+        tech_title: 'Tecnologías que Dominamos', tech_desc: 'Nuestro stack de ingeniería es moderno, escalable y probado en batalla.',
+        portfolio_label: 'Portafolio', portfolio_title: 'Trabajos', filter_all: 'Todos', filter_web: 'Web', filter_3d: '3D', filter_app: 'App',
+        process_title: 'Nuestro Proceso', process_desc: 'Una metodología probada para el éxito digital.',
+        team_label: 'Las Mentes', team_title: 'Conoce a los', rudra_role: 'Co-Fundador y CEO', parth_role: 'Co-Fundador y CTO',
+        rudra_bio: 'Tecnólogo visionario y arquitecto full-stack. Rudra impulsa la dirección estratégica de RUPA, asegurando que cada proyecto supere los estándares de la industria en rendimiento y escalabilidad.',
+        parth_bio: 'Ingeniero creativo especializado en web 3D, shaders WebGL e integración de IA. Parth lidera la I+D técnica, convirtiendo desafíos complejos en realidades digitales elegantes.',
+        testimonials_title: 'Voces de Clientes',
+        contact_label: 'Iniciar Conversación', contact_title: 'Creemos', contact_general: 'Consultas Generales', contact_query: 'Soporte de Consultas',
+        contact_hours_label: 'Disponibilidad', form_name: 'Nombre Completo', form_email: 'Correo Electrónico', form_subject: 'Asunto',
+        form_service: 'Servicio Requerido', form_select: 'Selecciona un servicio...', form_other: 'Otro', form_message: 'Tu Mensaje', form_submit: 'Enviar Mensaje',
+        footer_desc: 'Ingeniando el paisaje digital del mañana con precisión, creatividad y propósito.',
+        footer_links: 'Empresa', footer_services: 'Servicios', footer_contact: 'Contacto', footer_rights: 'Todos los derechos reservados.'
+      },
+      fr: {
+        nav_home: 'Accueil', nav_about: 'À Propos', nav_services: 'Services', nav_portfolio: 'Portfolio', nav_team: 'Équipe', nav_contact: 'Contact',
+        nav_cta: 'Démarrer un Projet', hero_badge: 'Agence Digitale Nouvelle Génération', hero_title: 'RUPA', hero_subtitle_prefix: 'Nous créons',
+        hero_desc: 'Conception d\'expériences web immersives, d\'applications intelligentes et d\'environnements 3D repoussant les limites pour le monde moderne.',
+        hero_cta_primary: 'Explorer les Réalisations', hero_cta_secondary: 'Nous Contacter', scroll: 'Défiler',
+        stat_projects: 'Projets', stat_clients: 'Clients', stat_years: 'Années', stat_team: 'Équipe',
+        about_label: 'Qui Nous Sommes', about_title_1: 'Construire l\'', about_title_2: 'Impossible',
+        about_p1: 'Fondée par Rudra Kukadiya et Parth Sangani, RUPA Developers est une puissance d\'innovation. Nous fusionnons l\'art et l\'ingénierie pour créer des logiciels qui ne se contentent pas de fonctionner—they inspirent.',
+        about_p2: 'Des expériences web 3D immersives propulsées par Three.js aux architectures cloud évolutives et aux intégrations IA intelligentes, notre équipe opère à l\'intersection du design et de la technologie de pointe.',
+        mission: 'Mission', mission_text: 'Ingénier l\'excellence numérique qui transcende les limites conventionnelles.',
+        vision: 'Vision', vision_text: 'Être les architectes de l\'internet de demain—immersif, intelligent et inclusif.',
+        services_label: 'Capacités', services_title: 'Notre', services_desc: 'Artisanat numérique complet—du concept au déploiement.',
+        tech_title: 'Technologies que Nous Maîtrisons', tech_desc: 'Notre stack d\'ingénierie est moderne, évolutif et éprouvé.',
+        portfolio_label: 'Portfolio', portfolio_title: 'Réalisations', filter_all: 'Tous', filter_web: 'Web', filter_3d: '3D', filter_app: 'App',
+        process_title: 'Notre Processus', process_desc: 'Une méthodologie éprouvée pour le succès numérique.',
+        team_label: 'Les Esprits', team_title: 'Rencontrez les', rudra_role: 'Co-Fondateur et CEO', parth_role: 'Co-Fondateur et CTO',
+        rudra_bio: 'Technologue visionnaire et architecte full-stack. Rudra dirige la direction stratégique de RUPA, veillant à ce que chaque projet dépasse les normes de l\'industrie en performance et évolutivité.',
+        parth_bio: 'Ingénieur créatif spécialisé dans le web 3D, les shaders WebGL et l\'intégration IA. Parth dirige la R&D technique, transformant les défis complexes en réalités numériques élégantes.',
+        testimonials_title: 'Témoignages Clients',
+        contact_label: 'Démarrer une Conversation', contact_title: 'Créons', contact_general: 'Demandes Générales', contact_query: 'Support Technique',
+        contact_hours_label: 'Disponibilité', form_name: 'Nom Complet', form_email: 'Adresse Email', form_subject: 'Sujet',
+        form_service: 'Service Requis', form_select: 'Sélectionnez un service...', form_other: 'Autre', form_message: 'Votre Message', form_submit: 'Envoyer le Message',
+        footer_desc: 'Concevoir le paysage numérique de demain avec précision, créativité et purpose.',
+        footer_links: 'Entreprise', footer_services: 'Services', footer_contact: 'Contact', footer_rights: 'Tous droits réservés.'
+      },
+      de: {
+        nav_home: 'Startseite', nav_about: 'Über Uns', nav_services: 'Dienstleistungen', nav_portfolio: 'Portfolio', nav_team: 'Team', nav_contact: 'Kontakt',
+        nav_cta: 'Projekt Starten', hero_badge: 'Digitalagentur der nächsten Generation', hero_title: 'RUPA', hero_subtitle_prefix: 'Wir gestalten',
+        hero_desc: 'Architektur immersiver Web-Erlebnisse, intelligenter Anwendungen und grenzüberschreitender 3D-Umgebungen für die moderne Welt.',
+        hero_cta_primary: 'Arbeiten Entdecken', hero_cta_secondary: 'Kontaktieren', scroll: 'Scrollen',
+        stat_projects: 'Projekte', stat_clients: 'Kunden', stat_years: 'Jahre', stat_team: 'Team',
+        about_label: 'Wer Wir Sind', about_title_1: 'Das Unmögliche', about_title_2: 'Bauen',
+        about_p1: 'Gegründet von Rudra Kukadiya und Parth Sangani, ist RUPA Developers ein Kraftwerk der Innovation. Wir vereinen Kunst und Ingenieurswesen, um Software zu schaffen, die nicht nur funktioniert, sondern inspiriert.',
+        about_p2: 'Von immersiven 3D-Web-Erlebnissen mit Three.js über skalierbare Cloud-Architekturen bis hin zu intelligenten KI-Integrationen arbeitet unser Team an der Schnittstelle von Design und Tiefentechnologie.',
+        mission: 'Mission', mission_text: 'Digitale Exzellenz zu entwickeln, die konventionelle Grenzen überwindet.',
+        vision: 'Vision', vision_text: 'Die Architekten des Internets von morgen zu sein—immersiv, intelligent und inklusiv.',
+        services_label: 'Fähigkeiten', services_title: 'Unser', services_desc: 'Digitales Handwerk aus einer Hand—von der Konzeption bis zum Deployment.',
+        tech_title: 'Technologien, die wir beherrschen', tech_desc: 'Unser Technologie-Stack ist modern, skalierbar und erprobt.',
+        portfolio_label: 'Portfolio', portfolio_title: 'Ausgewählte', filter_all: 'Alle', filter_web: 'Web', filter_3d: '3D', filter_app: 'App',
+        process_title: 'Unser Prozess', process_desc: 'Eine erprobte Methodik für digitalen Erfolg.',
+        team_label: 'Die Köpfe', team_title: 'Lernen Sie die', rudra_role: 'Mitbegründer und CEO', parth_role: 'Mitbegründer und CTO',
+        rudra_bio: 'Visionärer Technologe und Full-Stack-Architekt. Rudra treibt die strategische Ausrichtung von RUPA voran und stellt sicher, dass jedes Projekt die Branchenstandards in Leistung und Skalierbarkeit übertrifft.',
+        parth_bio: 'Kreativer Ingenieur mit Spezialisierung auf 3D-Web, WebGL-Shader und KI-Integration. Parth leitet die technische F&E und verwandelt komplexe Herausforderungen in elegante digitale Realitäten.',
+        testimonials_title: 'Kundenstimmen',
+        contact_label: 'Gespräch Beginnen', contact_title: 'Lassen Sie Uns', contact_general: 'Allgemeine Anfragen', contact_query: 'Anfragen-Support',
+        contact_hours_label: 'Verfügbarkeit', form_name: 'Vollständiger Name', form_email: 'E-Mail-Adresse', form_subject: 'Betreff',
+        form_service: 'Benötigter Service', form_select: 'Wählen Sie einen Service...', form_other: 'Andere', form_message: 'Ihre Nachricht', form_submit: 'Nachricht Senden',
+        footer_desc: 'Gestaltung der digitalen Landschaft von morgen mit Präzision, Kreativität und Zweck.',
+        footer_links: 'Unternehmen', footer_services: 'Dienstleistungen', footer_contact: 'Kontakt', footer_rights: 'Alle Rechte vorbehalten.'
+      },
+      ja: {
+        nav_home: 'ホーム', nav_about: '会社概要', nav_services: 'サービス', nav_portfolio: 'ポートフォリオ', nav_team: 'チーム', nav_contact: 'お問い合わせ',
+        nav_cta: 'プロジェクトを開始', hero_badge: '次世代デジタルエージェンシー', hero_title: 'RUPA', hero_subtitle_prefix: '私たちが創造するのは',
+        hero_desc: '没入型のWeb体験、インテリジェントなアプリケーション、そして現代の世界のために境界を押し広げる3D環境を設計します。',
+        hero_cta_primary: '作品を見る', hero_cta_secondary: 'お問い合わせ', scroll: 'スクロール',
+        stat_projects: 'プロジェクト', stat_clients: 'クライアント', stat_years: '年数', stat_team: 'チーム',
+        about_label: '私たちについて', about_title_1: '不可能を', about_title_2: '構築する',
+        about_p1: 'Rudra KukadiyaとParth Sanganiによって設立されたRUPA Developersは、イノベーションの原動力です。私たちは芸術と工学を融合させ、単に機能するだけでなく、人々を感動させるソフトウェアを創造します。',
+        about_p2: 'Three.jsを駆使した没入型3D Web体験から、スケーラブルなクラウドアーキテクチャ、インテリジェントなAI統合まで、私たちのチームはデザインと深い技術の交差点で活動しています。',
+        mission: 'ミッション', mission_text: '従来の枠を超えるデジタルエクセレンスを実現する。',
+        vision: 'ビジョン', vision_text: '没入型で、インテリジェントで、包括的な未来のインターネットの設計者となること。',
+        services_label: '能力', services_title: '私たちの', services_desc: 'コンセプトから展開まで、フルスペクトルのデジタル職人技。',
+        tech_title: 'マスターしている技術', tech_desc: '私たちのエンジニアリングスタックは、現代的でスケーラブル、かつ実戦で試されています。',
+        portfolio_label: 'ポートフォリオ', portfolio_title: '選りすぐりの', filter_all: 'すべて', filter_web: 'Web', filter_3d: '3D', filter_app: 'アプリ',
+        process_title: 'プロセス', process_desc: 'デジタル成功のための実証済みの方法論。',
+        team_label: '头脑', team_title: '設計者たちに', rudra_role: '共同創設者兼CEO', parth_role: '共同創設者兼CTO',
+        rudra_bio: '遠見のある技術者であり、フルスタックアーキテクト。RudraはRUPAの戦略的方向性を牽引し、すべてのプロジェクトがパフォーマンスとスケーラビリティで業界標準を超えることを保証します。',
+        parth_bio: '3D Web、WebGLシェーダー、AI統合を専門とするクリエイティブエンジニア。Parthは技術的な研究開発を主導し、複雑な課題をエレガントなデジタルリアリティに変えます。',
+        testimonials_title: 'お客様の声',
+        contact_label: '会話を始める', contact_title: '一緒に創造しよう', contact_general: '一般的なお問い合わせ', contact_query: 'クエリサポート',
+        contact_hours_label: '対応時間', form_name: '氏名', form_email: 'メールアドレス', form_subject: '件名',
+        form_service: '必要なサービス', form_select: 'サービスを選択...', form_other: 'その他', form_message: 'メッセージ', form_submit: 'メッセージを送信',
+        footer_desc: '精度、創造性、そして目的を持って、明日のデジタル landscape を設計する。',
+        footer_links: '会社', footer_services: 'サービス', footer_contact: 'お問い合わせ', footer_rights: '全著作権所有。'
+      },
+      zh: {
+        nav_home: '首页', nav_about: '关于我们', nav_services: '服务', nav_portfolio: '作品集', nav_team: '团队', nav_contact: '联系我们',
+        nav_cta: '开始项目', hero_badge: '新一代数字代理机构', hero_title: 'RUPA', hero_subtitle_prefix: '我们创造',
+        hero_desc: '为现代世界构建沉浸式网络体验、智能应用和突破边界的3D环境。',
+        hero_cta_primary: '探索作品', hero_cta_secondary: '联系我们', scroll: '滚动',
+        stat_projects: '项目', stat_clients: '客户', stat_years: '年数', stat_team: '团队',
+        about_label: '我们是谁', about_title_1: '构建', about_title_2: '不可能',
+        about_p1: 'RUPA Developers由Rudra Kukadiya和Parth Sangani创立，是创新的强大动力。我们将艺术与工程融合，创造出不仅功能完善，更能激发灵感的软件。',
+        about_p2: '从由Three.js驱动的沉浸式3D网络体验，到可扩展的云架构和智能AI集成，我们的团队在设计深度学习技术的交汇处运作。',
+        mission: '使命', mission_text: '打造超越传统界限的数字卓越品质。',
+        vision: '愿景', vision_text: '成为未来互联网的架构师——沉浸式、智能化、包容性。',
+        services_label: '能力', services_title: '我们的', services_desc: '从概念到部署的全方位数字工艺。',
+        tech_title: '我们掌握的技术', tech_desc: '我们的技术栈现代、可扩展且经过实战检验。',
+        portfolio_label: '作品集', portfolio_title: '精选', filter_all: '全部', filter_web: '网页', filter_3d: '3D', filter_app: '应用',
+        process_title: '我们的流程', process_desc: '经过实战检验的数字成功方法论。',
+        team_label: '头脑', team_title: '认识', rudra_role: '联合创始人兼首席执行官', parth_role: '联合创始人兼首席技术官',
+        rudra_bio: '富有远见的技术专家和全栈架构师。Rudra推动RUPA的战略方向，确保每个项目在性能和可扩展性方面都超越行业标准。',
+        parth_bio: '专注于3D网络、WebGL着色器和AI集成的创意工程师。Parth领导技术研发，将复杂的挑战转化为优雅的数字现实。',
+        testimonials_title: '客户心声',
+        contact_label: '开始对话', contact_title: '让我们一起创造', contact_general: '一般咨询', contact_query: '查询支持',
+        contact_hours_label: '工作时间', form_name: '全名', form_email: '电子邮件', form_subject: '主题',
+        form_service: '所需服务', form_select: '选择服务...', form_other: '其他', form_message: '您的留言', form_submit: '发送消息',
+        footer_desc: '以精确、创造力和目标设计未来的数字图景。',
+        footer_links: '公司', footer_services: '服务', footer_contact: '联系', footer_rights: '版权所有。'
+      },
+      ar: {
+        nav_home: 'الرئيسية', nav_about: 'من نحن', nav_services: 'الخدمات', nav_portfolio: 'المشاريع', nav_team: 'الفريق', nav_contact: 'اتصل بنا',
+        nav_cta: 'ابدأ مشروعًا', hero_badge: 'وكالة رقمية من الجيل التالي', hero_title: 'RUPA', hero_subtitle_prefix: 'نحن نصنع',
+        hero_desc: 'تصميم تجارب ويب غامرة، وتطبيقات ذكية، وبيئات ثلاثية الأبعاد تدفع الحدود من أجل العالم الحديث.',
+        hero_cta_primary: 'استكشف الأعمال', hero_cta_secondary: 'تواصل معنا', scroll: 'تمرير',
+        stat_projects: 'المشاريع', stat_clients: 'العملاء', stat_years: 'سنوات', stat_team: 'الفريق',
+        about_label: 'من نحن', about_title_1: 'بناء', about_title_2: 'المستحيل',
+        about_p1: 'تأسست RUPA Developers على يد رودرا كوكاديا وبارث سانجاني، وهي قوة للابتكار. ندمج الفن والهندسة لإنشاء برامج لا تعمل فحسب، بل تلهم.',
+        about_p2: 'من تجارب الويب ثلاثية الأبعاد الغامرة المدعومة بـ Three.js إلى البنى السحابية القابلة للتطوير وتكاملات الذكاء الاصطناعي الذكية، يعمل فريقنا عند تقاطع التصميم والتكنولوجيا المتعمقة.',
+        mission: 'المهمة', mission_text: 'هندسة التميز الرقمي الذي يتجاوز الحدود التقليدية.',
+        vision: 'الرؤية', vision_text: 'أن نكون مهندسي إنترنت الغد—غامر وذكي وشامل.',
+        services_label: 'القدرات', services_title: 'أسلحتنا', services_desc: 'حرفية رقمية كاملة الطيف—من المفهوم إلى النشر.',
+        tech_title: 'التقنيات التي نتقنها', tech_desc: '堆栈 الهندسة لدينا حديث وقابل للتطوير ومختبر في المعارك.',
+        portfolio_label: 'المشاريع', portfolio_title: 'أعمال مختارة', filter_all: 'الكل', filter_web: 'ويب', filter_3d: '3D', filter_app: 'تطبيق',
+        process_title: 'عمليتنا', process_desc: 'منهجية مجربة لتحقيق النجاح الرقمي.',
+        team_label: 'العقول', team_title: 'تعرف على', rudra_role: 'المؤسس المشارك والرئيس التنفيذي', parth_role: 'المؤسس المشارك والمدير التقني',
+        rudra_bio: 'تقني ذو رؤية ومهندس Full-Stack. يقود رودرا الاتجاه الاستراتيجي لـ RUPA، مضمنًا أن كل مشروع يتجاوز معايير الصناعة في الأداء وقابلية التوسع.',
+        parth_bio: 'مهندس مبدع متخصص في الويب ثلاثي الأبعاد، وظلال WebGL، وتكامل الذكاء الاصطناعي. يقود بارث البحث والتطوير التقني، محولًا التحديات المعقدة إلى واقع رقمي أنيق.',
+        testimonials_title: 'آراء العملاء',
+        contact_label: 'ابدأ محادثة', contact_title: 'لنبدأ', contact_general: 'استفسارات عامة', contact_query: 'دعم الاستفسارات',
+        contact_hours_label: 'التوفر', form_name: 'الاسم الكامل', form_email: 'البريد الإلكتروني', form_subject: 'الموضوع',
+        form_service: 'الخدمة المطلوبة', form_select: 'اختر خدمة...', form_other: 'أخرى', form_message: 'رسالتك', form_submit: 'إرسال الرسالة',
+        footer_desc: 'هندسة المشهد الرقمي للغد بدقة وإبداع وهدف.',
+        footer_links: 'الشركة', footer_services: 'الخدمات', footer_contact: 'اتصل', footer_rights: 'جميع الحقوق محفوظة.'
+      },
+      ru: {
+        nav_home: 'Главная', nav_about: 'О Нас', nav_services: 'Услуги', nav_portfolio: 'Портфолио', nav_team: 'Команда', nav_contact: 'Контакты',
+        nav_cta: 'Начать Проект', hero_badge: 'Цифровое Агентство Нового Поколения', hero_title: 'RUPA', hero_subtitle_prefix: 'Мы создаём',
+        hero_desc: 'Проектирование захватывающих веб-опытов, интеллектуальных приложений и 3D-сред, расширяющих границы для современного мира.',
+        hero_cta_primary: 'Исследовать Работы', hero_cta_secondary: 'Связаться', scroll: 'Прокрутка',
+        stat_projects: 'Проекты', stat_clients: 'Клиенты', stat_years: 'Лет', stat_team: 'Команда',
+        about_label: 'Кто Мы', about_title_1: 'Строя', about_title_2: 'Невозможное',
+        about_p1: 'Основанная Рудрой Кукадия и Партхом Сангани, RUPA Developers — это центр инноваций. Мы объединяем искусство и инженерное дело, создавая программное обеспечение, которое не просто работает, а вдохновляет.',
+        about_p2: 'От захватывающих 3D веб-опытов на Three.js до масштабируемых облачных архитектур и интеллектуальных AI-интеграций, наша команда работает на стыке дизайна и глубоких технологий.',
+        mission: 'Миссия', mission_text: 'Создавать цифровое совершенство, выходящее за рамки общепринятых ограничений.',
+        vision: 'Видение', vision_text: 'Стать архитекторами интернета завтрашнего дня—погружающего, интеллектуального и инклюзивного.',
+        services_label: 'Возможности', services_title: 'Наш', services_desc: 'Цифровое мастерство полного спектра—от концепции до развёртывания.',
+        tech_title: 'Технологии, Которыми Мы Владеем', tech_desc: 'Наш инженерный стек современен, масштабируем и проверен в бою.',
+        portfolio_label: 'Портфолио', portfolio_title: 'Избранные', filter_all: 'Все', filter_web: 'Веб', filter_3d: '3D', filter_app: 'Приложение',
+        process_title: 'Наш Процесс', process_desc: 'Боевой методологии для цифрового успеха.',
+        team_label: 'Умы', team_title: 'Познакомьтесь с', rudra_role: 'Соучредитель и CEO', parth_role: 'Соучредитель и CTO',
+        rudra_bio: 'Визионер-технолог и full-stack архитектор. Рудра определяет стратегическое направление RUPA, гарантируя, что каждый проект превосходит отраслевые стандарты производительности и масштабируемости.',
+        parth_bio: 'Креативный инженер, специализирующийся на 3D вебе, WebGL шейдерах и AI-интеграции. Партх руководит техническими исследованиями, превращая сложные задачи в элегантные цифровые реалии.',
+        testimonials_title: 'Голоса Клиентов',
+        contact_label: 'Начать Разговор', contact_title: 'Давайте Создадим', contact_general: 'Общие Вопросы', contact_query: 'Поддержка Запросов',
+        contact_hours_label: 'Доступность', form_name: 'Полное Имя', form_email: 'Email', form_subject: 'Тема',
+        form_service: 'Требуемая Услуга', form_select: 'Выберите услугу...', form_other: 'Другое', form_message: 'Ваше Сообщение', form_submit: 'Отправить Сообщение',
+        footer_desc: 'Проектирование цифрового ландшафта завтрашнего дня с точностью, креативностью и целью.',
+        footer_links: 'Компания', footer_services: 'Услуги', footer_contact: 'Контакты', footer_rights: 'Все права защищены.'
+      }
+    };
+
+    // ==========================================
+    // DATASETS
+    // ==========================================
+    const SERVICES_DATA = [
+      { icon: 'fa-laptop-code', title: 'Web Development', desc: 'High-performance websites and web applications using React, Next.js, and modern backend architectures.', color: 'from-teal-500 to-cyan-600' },
+      { icon: 'fa-mobile-screen', title: 'Mobile Apps', desc: 'Native and cross-platform mobile experiences with React Native and Flutter for iOS and Android.', color: 'from-violet-500 to-purple-600' },
+      { icon: 'fa-cube', title: '3D & WebGL', desc: 'Immersive 3D websites, configurators, and interactive experiences powered by Three.js and custom shaders.', color: 'from-rose-500 to-pink-600' },
+      { icon: 'fa-brain', title: 'AI Integration', desc: 'Smart systems leveraging Machine Learning, NLP, and computer vision to automate and enhance user experiences.', color: 'from-amber-500 to-orange-600' },
+      { icon: 'fa-pen-nib', title: 'UI/UX Design', desc: 'Human-centered design systems that balance aesthetics with usability and conversion optimization.', color: 'from-emerald-500 to-green-600' },
+      { icon: 'fa-cloud', title: 'Cloud Architecture', desc: 'Scalable, secure infrastructure on AWS, GCP, and Azure with DevOps and CI/CD pipelines.', color: 'from-blue-500 to-indigo-600' },
+      { icon: 'fa-shield-halved', title: 'Cybersecurity', desc: 'Penetration testing, security audits, and compliance implementation for enterprise-grade protection.', color: 'from-red-500 to-rose-600' },
+      { icon: 'fa-microchip', title: 'IoT Systems', desc: 'Connected device ecosystems with real-time data processing and edge computing capabilities.', color: 'from-cyan-500 to-blue-600' }
+    ];
+
+    const PORTFOLIO_DATA = [
+      { title: 'Neon Commerce', category: 'web', img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&h=400&fit=crop', tags: ['React', 'Node.js'] },
+      { title: 'Orbital 3D Configurator', category: '3d', img: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=600&h=400&fit=crop', tags: ['Three.js', 'WebGL'] },
+      { title: 'Pulse Health App', category: 'app', img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&h=400&fit=crop', tags: ['React Native', 'Firebase'] },
+      { title: 'Nebula Analytics', category: 'web', img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop', tags: ['D3.js', 'Python'] },
+      { title: 'Aether Metaverse', category: '3d', img: 'https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=600&h=400&fit=crop', tags: ['Unity', 'WebXR'] },
+      { title: 'Vault Security', category: 'app', img: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&h=400&fit=crop', tags: ['Rust', 'AWS'] },
+      { title: 'Zenith Dashboard', category: 'web', img: 'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=400&fit=crop', tags: ['Vue', 'Go'] },
+      { title: 'Spectra AI Vision', category: 'app', img: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&h=400&fit=crop', tags: ['TensorFlow', 'Python'] },
+      { title: 'Flux Architecture', category: 'web', img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&h=400&fit=crop', tags: ['Next.js', 'Prisma'] }
+    ];
+
+    const TIMELINE_DATA = [
+      { title: 'Discovery', desc: 'Deep dive into your goals, audience, and technical requirements.', icon: 'fa-magnifying-glass', side: 'left' },
+      { title: 'Strategy', desc: 'Architecting the solution with tech stack selection and UX planning.', icon: 'fa-chess-knight', side: 'right' },
+      { title: 'Design', desc: 'Crafting high-fidelity interfaces and interactive prototypes.', icon: 'fa-pen-ruler', side: 'left' },
+      { title: 'Development', desc: 'Engineering with clean code, agile sprints, and CI/CD integration.', icon: 'fa-code', side: 'right' },
+      { title: 'Testing', desc: 'Rigorous QA, performance audits, and security hardening.', icon: 'fa-vial', side: 'left' },
+      { title: 'Launch', desc: 'Deployment, monitoring, and continuous optimization post-launch.', icon: 'fa-rocket', side: 'right' }
+    ];
+
+
+    const TECH_DATA = [
+      { icon: 'fab fa-react', name: 'React' },
+      { icon: 'fab fa-vuejs', name: 'Vue.js' },
+      { icon: 'fab fa-angular', name: 'Angular' },
+      { icon: 'fab fa-node', name: 'Node.js' },
+      { icon: 'fab fa-python', name: 'Python' },
+      { icon: 'fab fa-js-square', name: 'JavaScript' },
+      { icon: 'fab fa-docker', name: 'Docker' },
+      { icon: 'fab fa-aws', name: 'AWS' },
+      { icon: 'fas fa-database', name: 'MongoDB' },
+      { icon: 'fas fa-fire', name: 'Firebase' },
+      { icon: 'fas fa-cube', name: 'Three.js' },
+      { icon: 'fas fa-brain', name: 'TensorFlow' },
+      { icon: 'fab fa-php', name: 'PHP' },
+      { icon: 'fab fa-android', name: 'Android' },
+      { icon: 'fab fa-sass', name: 'Sass' },
+      { icon: 'fab fa-git-alt', name: 'Git' }
+    ];
+
+    const TESTIMONIALS_DATA = [
+      {
+        name: 'Alex Chen',
+        role: 'CTO, Nexus Labs',
+        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face',
+        text: 'RUPA Developers transformed our vision into a stunning 3D web experience. Their Three.js expertise is unmatched—we saw a 40% increase in user engagement immediately after launch.',
+        stars: 5
+      },
+      {
+        name: 'Priya Mehta',
+        role: 'Founder, HealthSync',
+        avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=face',
+        text: 'Working with Rudra and Parth felt like having a world-class engineering team in-house. The mobile app they built for us exceeded every benchmark we had set.',
+        stars: 5
+      },
+      {
+        name: 'Marcus Williams',
+        role: 'VP Product, Orbital Inc',
+        avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=100&h=100&fit=crop&crop=face',
+        text: "Their AI integration expertise saved us months of development time. RUPA's team understood our complex requirements instantly and delivered a solution that was both elegant and performant.",
+        stars: 5
+      }
+    ];
+
+    /* =====================================================
+       LOADING SCREEN
+    ===================================================== */
+    function initLoadingScreen() {
+      const steps = [
+        'Loading Three.js modules',
+        'Initialising 3D engine',
+        'Generating particle systems',
+        'Compiling shaders',
+        'Calibrating RUPA engine'
+      ];
+      let step = 0;
+      const progress = document.getElementById('loader-progress');
+      const detail = document.getElementById('loader-detail');
+
+      const iv = setInterval(() => {
+        step++;
+        const pct = Math.min((step / steps.length) * 100, 100);
+        if (progress) progress.style.width = pct + '%';
+        if (detail && steps[step]) detail.textContent = steps[step];
+        if (step >= steps.length) clearInterval(iv);
+      }, 300);
+
+      window.addEventListener('load', () => {
+        clearInterval(iv);
+        if (progress) progress.style.width = '100%';
+        if (detail) detail.textContent = 'Complete!';
+        setTimeout(() => {
+          const screen = document.getElementById('loading-screen');
+          if (screen) screen.classList.add('hidden');
+        }, 500);
+      });
+    }
+
+    /* =====================================================
+       THREE.JS HERO CANVAS
+    ===================================================== */
+    function initHeroCanvas() {
+      const canvas = document.getElementById('canvas-hero');
+      if (!canvas || typeof THREE === 'undefined') return;
+
+      const parent = canvas.parentElement;
+      const W = parent.clientWidth, H = parent.clientHeight;
+
+      const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(W, H);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(50, W / H, 0.1, 100);
+      camera.position.set(0, 0, 9);
+
+      /* --- main wireframe icosahedron --- */
+      const icoGeo = new THREE.IcosahedronGeometry(1.6, 1);
+      const icoMat = new THREE.MeshPhongMaterial({ color: 0x00f0ff, wireframe: true, transparent: true, opacity: 0.22 });
+      const ico = new THREE.Mesh(icoGeo, icoMat);
+      scene.add(ico);
+
+      /* --- translucent inner icosahedron (glow core) --- */
+      const icoCore = new THREE.Mesh(
+        new THREE.IcosahedronGeometry(1.3, 1),
+        new THREE.MeshPhongMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.04 })
+      );
+      scene.add(icoCore);
+
+      /* --- orbit rings --- */
+      const ringDefs = [
+        { r: 2.6, tube: 0.012, color: 0x8b5cf6, rx: Math.PI / 3, ry: 0 },
+        { r: 3.4, tube: 0.009, color: 0xf43f5e, rx: -Math.PI / 5, ry: Math.PI / 4 },
+        { r: 2.0, tube: 0.007, color: 0x00f0ff, rx: Math.PI / 2, ry: 0 }
+      ];
+      const rings = ringDefs.map(d => {
+        const m = new THREE.Mesh(
+          new THREE.TorusGeometry(d.r, d.tube, 16, 120),
+          new THREE.MeshBasicMaterial({ color: d.color, transparent: true, opacity: 0.35 })
+        );
+        m.rotation.set(d.rx, d.ry, 0);
+        scene.add(m);
+        return m;
+      });
+
+      /* --- sphere of floating dots --- */
+      const DOT_N = 120;
+      const dotPos = new Float32Array(DOT_N * 3);
+      for (let i = 0; i < DOT_N; i++) {
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.acos(2 * Math.random() - 1);
+        const r = 4.0 + Math.random() * 1.2;
+        dotPos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+        dotPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+        dotPos[i * 3 + 2] = r * Math.cos(phi);
+      }
+      const dotGeo = new THREE.BufferGeometry();
+      dotGeo.setAttribute('position', new THREE.BufferAttribute(dotPos, 3));
+      const dots = new THREE.Points(dotGeo, new THREE.PointsMaterial({ color: 0x00f0ff, size: 0.045, transparent: true, opacity: 0.75 }));
+      scene.add(dots);
+
+      /* --- small orbiting satellites (octahedra) --- */
+      const COLORS = [0x00f0ff, 0x8b5cf6, 0xf43f5e, 0x00f0ff, 0x8b5cf6, 0xf43f5e];
+      const sats = Array.from({ length: 6 }, (_, i) => {
+        const mesh = new THREE.Mesh(
+          new THREE.OctahedronGeometry(0.1 + Math.random() * 0.08),
+          new THREE.MeshPhongMaterial({ color: COLORS[i], transparent: true, opacity: 0.7 })
+        );
+        mesh._phase = (i / 6) * Math.PI * 2;
+        mesh._radius = 2.2 + Math.random() * 0.6;
+        mesh._speed = 0.25 + Math.random() * 0.25;
+        mesh._incline = (Math.random() - 0.5) * 1.2;
+        scene.add(mesh);
+        return mesh;
+      });
+
+      /* --- edge lines on icosahedron --- */
+      const edges = new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(1.6, 0));
+      const lineMesh = new THREE.LineSegments(
+        edges,
+        new THREE.LineBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.12 })
+      );
+      scene.add(lineMesh);
+
+      /* --- lights --- */
+      scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+      const pLight1 = new THREE.PointLight(0x00f0ff, 4, 30); pLight1.position.set(5, 5, 5); scene.add(pLight1);
+      const pLight2 = new THREE.PointLight(0x8b5cf6, 3, 30); pLight2.position.set(-5, -4, 3); scene.add(pLight2);
+      const pLight3 = new THREE.PointLight(0xf43f5e, 1.5, 20); pLight3.position.set(0, -6, -3); scene.add(pLight3);
+
+      /* --- mouse parallax --- */
+      let targetCX = 0, targetCY = 0;
+      document.addEventListener('mousemove', e => {
+        targetCX = (e.clientX / window.innerWidth - 0.5) * 1.2;
+        targetCY = -(e.clientY / window.innerHeight - 0.5) * 1.0;
+      });
+
+      const clock = new THREE.Clock();
+      function animate() {
+        requestAnimationFrame(animate);
+        const t = clock.getElapsedTime();
+
+        ico.rotation.x = t * 0.13;
+        ico.rotation.y = t * 0.19;
+        icoCore.rotation.x = t * 0.13;
+        icoCore.rotation.y = t * 0.19;
+        lineMesh.rotation.x = t * 0.13;
+        lineMesh.rotation.y = t * 0.19;
+
+        rings[0].rotation.z = t * 0.12;
+        rings[1].rotation.z = -t * 0.08;
+        rings[2].rotation.z = t * 0.20;
+
+        dots.rotation.y = t * 0.06;
+        dots.rotation.x = t * 0.03;
+
+        sats.forEach((s, i) => {
+          const a = s._phase + t * s._speed;
+          s.position.set(
+            Math.cos(a) * s._radius,
+            Math.sin(a * 0.7 + s._incline) * s._radius * 0.5 + Math.sin(t * 0.4 + i) * 0.15,
+            Math.sin(a) * s._radius * 0.4
+          );
+          s.rotation.x = t * 0.6 + i;
+          s.rotation.y = t * 0.4;
+        });
+
+        camera.position.x += (targetCX - camera.position.x) * 0.04;
+        camera.position.y += (targetCY - camera.position.y) * 0.04;
+        camera.lookAt(0, 0, 0);
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      window.addEventListener('resize', () => {
+        const nw = parent.clientWidth, nh = parent.clientHeight;
+        renderer.setSize(nw, nh);
+        camera.aspect = nw / nh;
+        camera.updateProjectionMatrix();
+      });
+    }
+
+    /* =====================================================
+       BACKGROUND PARTICLE CANVAS
+    ===================================================== */
+    function initParticleCanvas() {
+      const canvas = document.getElementById('canvas-particles');
+      if (!canvas || typeof THREE === 'undefined') return;
+
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 200);
+      camera.position.z = 5;
+
+      const N = 2500;
+      const pos = new Float32Array(N * 3);
+      const colArr = new Float32Array(N * 3);
+
+      for (let i = 0; i < N; i++) {
+        pos[i * 3] = (Math.random() - 0.5) * 50;
+        pos[i * 3 + 1] = (Math.random() - 0.5) * 50;
+        pos[i * 3 + 2] = (Math.random() - 0.5) * 30 - 5;
+        const cyan = Math.random() > 0.6;
+        colArr[i * 3] = cyan ? 0 : 0.54;
+        colArr[i * 3 + 1] = cyan ? 0.94 : 0.36;
+        colArr[i * 3 + 2] = 1.0;
+      }
+
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      geo.setAttribute('color', new THREE.BufferAttribute(colArr, 3));
+
+      const stars = new THREE.Points(geo, new THREE.PointsMaterial({
+        size: 0.022, vertexColors: true, transparent: true, opacity: 0.75, sizeAttenuation: true
+      }));
+      scene.add(stars);
+
+      function animate() {
+        requestAnimationFrame(animate);
+        stars.rotation.y += 0.00007;
+        stars.rotation.x += 0.000035;
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      window.addEventListener('resize', () => {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+      });
+    }
+
+    /* =====================================================
+       CUSTOM CURSOR
+    ===================================================== */
+    function initCursor() {
+      const dot = document.getElementById('cursor-dot');
+      const outline = document.getElementById('cursor-outline');
+      if (!dot || !outline) return;
+
+      let mx = 0, my = 0, ox = 0, oy = 0;
+
+      document.addEventListener('mousemove', e => {
+        mx = e.clientX; my = e.clientY;
+        dot.style.left = mx + 'px';
+        dot.style.top = my + 'px';
+      });
+
+      (function moveCursor() {
+        ox += (mx - ox) * 0.14;
+        oy += (my - oy) * 0.14;
+        outline.style.left = ox + 'px';
+        outline.style.top = oy + 'px';
+        requestAnimationFrame(moveCursor);
+      })();
+
+      const hoverEls = 'a, button, .glass-card, .glass-panel, .portfolio-card, .tech-icon-wrap, .filter-btn, .lang-item';
+      document.querySelectorAll(hoverEls).forEach(el => {
+        el.addEventListener('mouseenter', () => outline.classList.add('hover'));
+        el.addEventListener('mouseleave', () => outline.classList.remove('hover'));
+      });
+    }
+
+    /* =====================================================
+       NAVIGATION
+    ===================================================== */
+    function buildNavLinks() {
+      const navLinks = document.getElementById('nav-links');
+      const mobileLinks = document.getElementById('mobile-nav-links');
+
+      const sections = [
+        { id: 'home', key: 'nav_home' },
+        { id: 'about', key: 'nav_about' },
+        { id: 'services', key: 'nav_services' },
+        { id: 'portfolio', key: 'nav_portfolio' },
+        { id: 'team', key: 'nav_team' },
+        { id: 'contact', key: 'nav_contact' }
+      ];
+
+      const dict = i18n[CONFIG.lang] || i18n['en'];
+
+      if (navLinks) {
+        navLinks.innerHTML = sections.map(s => `
+                    <a href="#${s.id}" class="nav-link" data-i18n="${s.key}">${dict[s.key]}</a>
+                `).join('');
+      }
+
+      if (mobileLinks) {
+        mobileLinks.innerHTML = sections.map(s => `
+                    <a href="#${s.id}" class="nav-link text-2xl text-white hover:text-teal-400 transition-colors" data-i18n="${s.key}" onclick="closeMobileMenu()">${dict[s.key]}</a>
+                `).join('');
+      }
+    }
+
+    function initNavigation() {
+      buildNavLinks();
+
+      const navbar = document.getElementById('navbar');
+      const btn = document.getElementById('back-to-top');
+
+      window.addEventListener('scroll', () => {
+        if (navbar) {
+          navbar.classList.toggle('scrolled', window.scrollY > 50);
+        }
+        if (btn) {
+          const show = window.scrollY > 400;
+          btn.style.opacity = show ? '1' : '0';
+          btn.style.pointerEvents = show ? 'auto' : 'none';
+        }
+
+        /* active link highlight */
+        const scrollY = window.scrollY + 120;
+        document.querySelectorAll('section[id]').forEach(sec => {
+          const top = sec.offsetTop;
+          const bot = top + sec.offsetHeight;
+          document.querySelectorAll(`.nav-link[href="#${sec.id}"]`).forEach(lnk => {
+            lnk.classList.toggle('active', scrollY >= top && scrollY < bot);
+          });
+        });
+      });
+    }
+
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('mobile-menu-icon');
+      if (!menu) return;
+      const open = menu.style.opacity === '1';
+      menu.style.opacity = open ? '0' : '1';
+      menu.style.pointerEvents = open ? 'none' : 'auto';
+      if (icon) icon.className = open ? 'fas fa-bars' : 'fas fa-times';
+    }
+
+    function closeMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      const icon = document.getElementById('mobile-menu-icon');
+      if (menu) { menu.style.opacity = '0'; menu.style.pointerEvents = 'none'; }
+      if (icon) icon.className = 'fas fa-bars';
+    }
+
+    /* =====================================================
+       LANGUAGE SYSTEM
+    ===================================================== */
+    function buildLangMenu() {
+      const menu = document.getElementById('lang-menu');
+      const mobileLB = document.getElementById('mobile-lang-buttons');
+
+      if (menu) {
+        menu.innerHTML = LANGUAGES.map(l => `
+                    <div class="lang-item${l.code === CONFIG.lang ? ' active' : ''}"
+                         onclick="switchLanguage('${l.code}')">
+                        <span>${l.flag}</span><span>${l.name}</span>
+                    </div>
+                `).join('');
+      }
+
+      if (mobileLB) {
+        mobileLB.innerHTML = LANGUAGES.slice(0, 8).map(l => `
+                    <button onclick="switchLanguage('${l.code}'); closeMobileMenu();"
+                        class="px-3 py-1.5 rounded-lg text-xs border border-white/10 hover:border-teal-500/30
+                               text-gray-400 hover:text-teal-400 transition-all">
+                        ${l.flag} ${l.code.toUpperCase()}
+                    </button>
+                `).join('');
+      }
+    }
+
+    function applyLanguage(code) {
+      const dict = i18n[code] || i18n['en'];
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const k = el.getAttribute('data-i18n');
+        if (dict[k] !== undefined) el.textContent = dict[k];
+      });
+      const label = document.getElementById('current-lang-label');
+      if (label) label.textContent = code.toUpperCase();
+    }
+
+    function switchLanguage(code) {
+      if (!i18n[code]) return;
+      CONFIG.lang = code;
+      localStorage.setItem('rupa-lang', code);
+
+      const langObj = LANGUAGES.find(l => l.code === code);
+      if (langObj) document.documentElement.setAttribute('dir', langObj.dir);
+
+      applyLanguage(code);
+      buildLangMenu();
+      buildNavLinks();
+    }
+
+    /* =====================================================
+       THEME TOGGLE
+    ===================================================== */
+    function applyTheme(theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+      const icon = document.getElementById('theme-icon');
+      if (icon) icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    }
+
+    function toggleTheme() {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      CONFIG.theme = next;
+      localStorage.setItem('rupa-theme', next);
+      applyTheme(next);
+    }
+
+    /* =====================================================
+       RENDER — SERVICES
+    ===================================================== */
+    function renderServices() {
+      const grid = document.getElementById('services-grid');
+      if (!grid) return;
+      grid.innerHTML = SERVICES_DATA.map((s, i) => `
+                <div class="glass-card p-6 gsap-reveal" style="transition-delay:${(i * 0.06).toFixed(2)}s">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center
+                                mb-5 text-white text-2xl shadow-lg shadow-black/20">
+                        <i class="fas ${s.icon}"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold mb-2 font-['Space_Grotesk']">${s.title}</h3>
+                    <p class="text-gray-500 text-sm leading-relaxed">${s.desc}</p>
+                </div>
+            `).join('');
+    }
+
+    /* =====================================================
+       RENDER — TECH GRID
+    ===================================================== */
+    function renderTechGrid() {
+      const grid = document.getElementById('tech-grid');
+      if (!grid) return;
+      grid.innerHTML = TECH_DATA.map(t => `
+                <div class="tech-icon-wrap">
+                    <i class="${t.icon}" style="font-size:2rem;color:var(--color-accent)"></i>
+                    <span class="text-xs text-gray-400 font-medium">${t.name}</span>
+                </div>
+            `).join('');
+    }
+
+    /* =====================================================
+       RENDER — PORTFOLIO
+    ===================================================== */
+    function renderPortfolio(filter) {
+      filter = filter || 'all';
+      const grid = document.getElementById('portfolio-grid');
+      if (!grid) return;
+
+      const items = filter === 'all'
+        ? PORTFOLIO_DATA
+        : PORTFOLIO_DATA.filter(p => p.category === filter);
+
+      grid.innerHTML = items.map((p, i) => `
+                <div class="portfolio-card gsap-reveal" style="transition-delay:${(i * 0.07).toFixed(2)}s">
+                    <img src="${p.img}" alt="${p.title}" class="w-full aspect-[4/3] object-cover" loading="lazy">
+                    <div class="portfolio-overlay">
+                        <h3 class="text-white text-xl font-bold mb-3 font-['Space_Grotesk']">${p.title}</h3>
+                        <div class="flex flex-wrap gap-2 justify-center mb-5">
+                            ${p.tags.map(tag => `<span class="px-3 py-1 rounded-full bg-white/20 text-white text-xs font-semibold">${tag}</span>`).join('')}
+                        </div>
+                        <a href="#contact" class="px-5 py-2 bg-white text-gray-900 rounded-lg text-sm font-semibold
+                                                  hover:bg-teal-300 transition-colors shadow-lg">
+                            View Project <i class="fas fa-arrow-right ml-1 text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+
+      observeRevealElements();
+    }
+
+    function initPortfolioFilters() {
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.filter-btn').forEach(b => {
+            b.classList.remove('active', 'border-teal-500/30', 'bg-teal-500/10', 'text-teal-400');
+            b.classList.add('border-white/10', 'text-gray-400');
+          });
+          btn.classList.remove('border-white/10', 'text-gray-400');
+          btn.classList.add('active', 'border-teal-500/30', 'bg-teal-500/10', 'text-teal-400');
+          renderPortfolio(btn.getAttribute('data-filter'));
+        });
+      });
+    }
+
+    /* =====================================================
+       RENDER — TIMELINE
+    ===================================================== */
+    function renderTimeline() {
+      const container = document.getElementById('timeline-container');
+      if (!container) return;
+
+      container.innerHTML = '<div class="timeline-line"></div>';
+
+      TIMELINE_DATA.forEach((item, i) => {
+        const isLeft = item.side === 'left';
+        const el = document.createElement('div');
+        el.className = `relative flex ${isLeft ? 'flex-row' : 'flex-row-reverse'} items-center mb-16 gsap-reveal`;
+        el.style.transitionDelay = (i * 0.1) + 's';
+
+        el.innerHTML = `
+                    <div class="timeline-dot" style="top:50%;"></div>
+
+                    <div class="w-full md:w-5/12 ${isLeft ? 'md:pr-16 pl-10 md:pl-0' : 'md:pl-16 pl-10'}">
+                        <div class="glass-card p-6 group hover:border-teal-500/30">
+                            <div class="flex items-center gap-3 mb-3">
+                                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-violet-600 flex
+                                            items-center justify-center text-white text-sm shadow-lg shadow-teal-500/20 flex-shrink-0">
+                                    <i class="fas ${item.icon}"></i>
+                                </div>
+                                <h3 class="font-bold text-lg font-['Space_Grotesk'] group-hover:text-teal-400 transition-colors">${item.title}</h3>
+                            </div>
+                            <p class="text-gray-400 text-sm leading-relaxed">${item.desc}</p>
+                        </div>
+                    </div>
+
+                    <div class="hidden md:block md:w-2/12"></div>
+                    <div class="hidden md:block md:w-5/12"></div>
+                `;
+        container.appendChild(el);
+      });
+    }
+
+    /* =====================================================
+       RENDER — TESTIMONIALS
+    ===================================================== */
+    function renderTestimonials() {
+      const grid = document.getElementById('testimonials-grid');
+      if (!grid) return;
+      grid.innerHTML = TESTIMONIALS_DATA.map((t, i) => `
+                <div class="glass-card p-8 gsap-reveal" style="transition-delay:${(i * 0.12).toFixed(2)}s">
+                    <div class="flex mb-5">
+                        ${Array(t.stars).fill(0).map(() => '<i class="fas fa-star text-amber-400 text-sm mr-0.5"></i>').join('')}
+                    </div>
+                    <p class="text-gray-300 text-sm leading-relaxed mb-7">"${t.text}"</p>
+                    <div class="flex items-center gap-4 pt-5 border-t border-white/5">
+                        <img src="${t.avatar}" alt="${t.name}"
+                             class="w-12 h-12 rounded-full object-cover border-2 border-teal-500/30" loading="lazy">
+                        <div>
+                            <p class="font-semibold font-['Space_Grotesk'] text-sm">${t.name}</p>
+                            <p class="text-gray-500 text-xs mt-0.5">${t.role}</p>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+    }
+
+    /* =====================================================
+       CONTACT FORM
+    ===================================================== */
+    function handleContactSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span> Sending…</span>';
+      btn.disabled = true;
+
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.disabled = false;
+        e.target.reset();
+        showToast('Message sent successfully! We\'ll get back to you shortly. 🚀');
+      }, 1800);
+    }
+
+    /* =====================================================
+       TOAST NOTIFICATION
+    ===================================================== */
+    function showToast(message, duration) {
+      duration = duration || 4000;
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toast-message');
+      if (!toast || !msg) return;
+      msg.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), duration);
+    }
+
+    /* =====================================================
+       COUNTER ANIMATION
+    ===================================================== */
+    function animateCounters() {
+      document.querySelectorAll('.counter').forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-target'), 10);
+        const duration = 2200;
+        const start = performance.now();
+
+        function tick(now) {
+          const elapsed = now - start;
+          const progress = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 4);
+          counter.textContent = Math.floor(eased * target) + '+';
+          if (progress < 1) requestAnimationFrame(tick);
+          else counter.textContent = target + '+';
+        }
+        requestAnimationFrame(tick);
+      });
+    }
+
+    /* =====================================================
+       TEXT SCRAMBLE
+    ===================================================== */
+    function initScramble() {
+      const el = document.getElementById('scramble-target');
+      if (!el) return;
+
+      const phrases = [
+        'digital realities',
+        'immersive worlds',
+        '3D experiences',
+        'intelligent apps',
+        'future visions',
+        'web magic'
+      ];
+      const CHARS = '!<>-_\\/[]{}=+*^?#';
+      let idx = 0, busy = false;
+
+      function scramble(newText) {
+        if (busy) return;
+        busy = true;
+        const oldText = el.textContent;
+        const len = Math.max(oldText.length, newText.length);
+        const queue = [];
+
+        for (let i = 0; i < len; i++) {
+          queue.push({
+            from: oldText[i] || '',
+            to: newText[i] || '',
+            start: Math.floor(Math.random() * 8),
+            end: Math.floor(Math.random() * 8) + 8,
+            char: ''
+          });
+        }
+
+        let frame = 0;
+        function update() {
+          let out = '', done = 0;
+          queue.forEach(item => {
+            if (frame >= item.end) { out += item.to; done++; }
+            else if (frame >= item.start) {
+              item.char = CHARS[Math.floor(Math.random() * CHARS.length)];
+              out += `<span class="text-teal-400 opacity-60">${item.char}</span>`;
+            } else { out += item.from; }
+          });
+          el.innerHTML = out;
+          if (done === queue.length) { busy = false; return; }
+          frame++;
+          requestAnimationFrame(update);
+        }
+        update();
+      }
+
+      setInterval(() => {
+        idx = (idx + 1) % phrases.length;
+        scramble(phrases[idx]);
+      }, 3200);
+    }
+
+    /* =====================================================
+       GSAP SCROLL ANIMATIONS
+    ===================================================== */
+    function initScrollAnimations() {
+      if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+        observeRevealElements();
+        return;
+      }
+      gsap.registerPlugin(ScrollTrigger);
+
+      gsap.utils.toArray('.gsap-reveal').forEach(el => {
+        gsap.fromTo(el,
+          { opacity: 0, y: 55 },
+          {
+            opacity: 1, y: 0, duration: 0.9,
+            ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+          }
+        );
+      });
+
+      ScrollTrigger.create({
+        trigger: '.counter', start: 'top 80%', once: true,
+        onEnter: animateCounters
+      });
+
+      gsap.to('#canvas-hero', {
+        yPercent: 25, ease: 'none',
+        scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: true }
+      });
+    }
+
+    /* =====================================================
+       INTERSECTION OBSERVER FALLBACK
+    ===================================================== */
+    function observeRevealElements() {
+      const io = new IntersectionObserver(entries => {
+        entries.forEach(en => {
+          if (en.isIntersecting) {
+            en.target.style.opacity = '1';
+            en.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('.gsap-reveal').forEach(el => {
+        if (!el.getAttribute('data-observed')) {
+          el.style.opacity = '0';
+          el.style.transform = 'translateY(40px)';
+          el.style.transition = `opacity 0.85s ease ${el.style.transitionDelay || '0s'}, transform 0.85s ease ${el.style.transitionDelay || '0s'}`;
+          el.setAttribute('data-observed', '1');
+          io.observe(el);
+        }
+      });
+    }
+
+    /* =====================================================
+       MAGNETIC BUTTONS
+    ===================================================== */
+    function initMagneticButtons() {
+      document.querySelectorAll('.magnetic').forEach(btn => {
+        btn.addEventListener('mousemove', e => {
+          const rect = btn.getBoundingClientRect();
+          const x = (e.clientX - rect.left - rect.width / 2) * 0.14;
+          const y = (e.clientY - rect.top - rect.height / 2) * 0.14;
+          btn.style.transform = `translate(${x}px,${y}px)`;
+        });
+        btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+      });
+    }
+
+    /* =====================================================
+       CARD MOUSE-GLOW
+    ===================================================== */
+    function initCardGlow() {
+      document.querySelectorAll('.glass-card').forEach(card => {
+        card.addEventListener('mousemove', e => {
+          const r = card.getBoundingClientRect();
+          card.style.setProperty('--mouse-x', ((e.clientX - r.left) / r.width * 100) + '%');
+          card.style.setProperty('--mouse-y', ((e.clientY - r.top) / r.height * 100) + '%');
+        });
+      });
+    }
+
+    /* =====================================================
+       SMOOTH SCROLL (hash links)
+    ===================================================== */
+    function initSmoothScroll() {
+      document.addEventListener('click', e => {
+        const a = e.target.closest('a[href^="#"]');
+        if (!a) return;
+        const href = a.getAttribute('href');
+        if (href === '#') return;
+        const target = document.querySelector(href);
+        if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      });
+    }
+
+    /* =====================================================
+       BACK TO TOP
+    ===================================================== */
+    function initBackToTop() {
+      const btn = document.getElementById('back-to-top');
+      if (btn) btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    }
+
+    /* =====================================================
+       MAIN INIT
+    ===================================================== */
+    function init() {
+      /* Theme */
+      applyTheme(CONFIG.theme);
+
+      /* Loading screen */
+      initLoadingScreen();
+
+      /* Three.js */
+      initHeroCanvas();
+      initParticleCanvas();
+
+      /* UI */
+      initCursor();
+      initNavigation();
+      buildLangMenu();
+      applyLanguage(CONFIG.lang);
+
+      /* Section renderers */
+      renderServices();
+      renderTechGrid();
+      renderPortfolio('all');
+      renderTimeline();
+      renderTestimonials();
+      initPortfolioFilters();
+
+      /* Effects */
+      initScramble();
+      initMagneticButtons();
+      initCardGlow();
+      initSmoothScroll();
+      initBackToTop();
+
+      /* Scroll animations */
+      initScrollAnimations();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
 </body>
+
 </html>
